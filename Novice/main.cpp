@@ -31,6 +31,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Matrix4x4 resultAdd = ownMatrix4x4->Add(m1, m2);
 	Matrix4x4 resultSubtract = ownMatrix4x4->Subtract(m1, m2);
+	Matrix4x4 resultMultiply = ownMatrix4x4->Multiply(m1, m2);
+	Matrix4x4 inverseM1 = ownMatrix4x4->Inverse(m1);
+	Matrix4x4 inverseM2 = ownMatrix4x4->Inverse(m2);
 	
 	
 	
@@ -55,8 +58,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-		ownMatrix4x4->MatrixScreenPrintf(0, 0, resultAdd);
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5, resultSubtract);
+		ownMatrix4x4->MatrixScreenPrintf(0, 0, resultAdd, "Add");
+		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5, resultSubtract, "Subtract");
+		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 2, resultMultiply, "Multiply");
+		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 3, inverseM1, "InverseM1");
+		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 4, inverseM2, "InverseM2");
 		///
 		/// ↑描画処理ここまで
 		///
