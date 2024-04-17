@@ -16,6 +16,9 @@ class OwnMatrix4x4
 
 	Matrix4x4 Inverse(Matrix4x4& m1);
 
+	Matrix4x4 Transpose(Matrix4x4& m1);
+	Matrix4x4 MakeIdentify4x4();
+
 
 
 	void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);

@@ -34,6 +34,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Matrix4x4 resultMultiply = ownMatrix4x4->Multiply(m1, m2);
 	Matrix4x4 inverseM1 = ownMatrix4x4->Inverse(m1);
 	Matrix4x4 inverseM2 = ownMatrix4x4->Inverse(m2);
+	Matrix4x4 transposeM1 = ownMatrix4x4->Transpose(m1);
+	Matrix4x4 transposeM2 = ownMatrix4x4->Transpose(m2);
+	Matrix4x4 identify = ownMatrix4x4->MakeIdentify4x4();
 	
 	
 	
@@ -63,6 +66,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 2, resultMultiply, "Multiply");
 		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 3, inverseM1, "InverseM1");
 		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 4, inverseM2, "InverseM2");
+		ownMatrix4x4->MatrixScreenPrintf(kColumnWidth * 5, 0, transposeM1, "TransposeM1");
+		ownMatrix4x4->MatrixScreenPrintf(kColumnWidth * 5, kColumnHeight * 5, transposeM2, "TransposeM2");
+		ownMatrix4x4->MatrixScreenPrintf(kColumnWidth * 5, kColumnHeight * 5 * 2, identify, "Identify");
 		///
 		/// ↑描画処理ここまで
 		///

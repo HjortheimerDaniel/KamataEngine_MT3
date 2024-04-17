@@ -92,10 +92,32 @@ Matrix4x4 OwnMatrix4x4::Inverse(Matrix4x4& m1)
 	return result;
 }
 
+Matrix4x4 OwnMatrix4x4::Transpose(Matrix4x4& m1)
+{
+	Matrix4x4 result{
+		m1.m[0][0], m1.m[1][0],m1.m[2][0],m1.m[3][0],
+		m1.m[0][1], m1.m[1][1],m1.m[2][1],m1.m[3][1],
+		m1.m[0][2], m1.m[1][2],m1.m[2][2],m1.m[3][2],
+		m1.m[0][3],m1.m[1][3],m1.m[2][3],m1.m[3][3]
+	};
+	return result;
+}
+
+Matrix4x4 OwnMatrix4x4::MakeIdentify4x4()
+{
+	Matrix4x4 result{
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
+	return result;
+}
+
 
 void OwnMatrix4x4::MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label)
 {
-	Novice::ScreenPrintf(x * 3, y, "%s", label);
+	Novice::ScreenPrintf(x, y, "%s", label);
 
 	for (int row = 0; row < 4; row++)
 	{
