@@ -39,6 +39,8 @@ class OwnMatrix4x4
 
 	Matrix4x4 MakeRotateZMatrix(float radian);
 
+	Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, const Vector3& translate);
+
 };
 
 

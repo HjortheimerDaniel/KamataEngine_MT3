@@ -209,6 +209,60 @@ Matrix4x4 OwnMatrix4x4::MakeRotateZMatrix(float radian)
 	return result;
 }
 
+Matrix4x4 OwnMatrix4x4::MakeAffineMatrix(const Vector3& scale, const Vector3& rot, const Vector3& translate)
+{
+	//Matrix4x4 Scale{
+	//	scale.x, 0, 0, 0,
+	//	0, scale.y, 0, 0,
+	//	0, 0, scale.z, 0,
+	//	0, 0, 0, 1
+	//};
+	//
+	//Matrix4x4 Translate{
+	//	1, 0, 0, 0,
+	//	0, 1, 0, 0,
+	//	0, 0, 1, 0,
+	//	translate.x, translate.y, translate.z, 1
+	//};
+
+	Matrix4x4 MakeRotateMatrixZ{
+			std::cos(rot.z), std::sin(rot.z), 0, 0,
+			-std::sin(rot.z), std::cos(rot.z), 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+	};
+
+	Matrix4x4 MakeRotateMatrixX{
+			1, 0, 0, 0,
+			0, std::cos(rot.x), std::sin(rot.x), 0,
+			0, -std::sin(rot.x), std::cos(rot.x), 0,
+			0, 0, 0, 1
+	};
+
+	Matrix4x4 MakeRotateMatrixY{
+			std::cos(rot.y), 0, -std::sin(rot.y), 0,
+			0, 1, 0, 0,
+			std::sin(rot.y), 0, std::cos(rot.y), 0,
+			0, 0, 0, 1
+	};
+
+	Matrix4x4 RotateYZ = Multiply(MakeRotateMatrixY, MakeRotateMatrixZ);
+	//
+	Matrix4x4 Rotate = Multiply(MakeRotateMatrixX, RotateYZ);
+	//Matrix4x4 ScaleRotate = Multiply(Scale, Rotate);
+	//Matrix4x4 result = Multiply(Translate, ScaleRotate);
+
+	Matrix4x4 result{
+		scale.x * Rotate.m[0][0], scale.x * Rotate.m[0][1], scale.x * Rotate.m[0][2], 0,
+		scale.y * Rotate.m[1][0], scale.y * Rotate.m[1][1], scale.y * Rotate.m[1][2], 0,
+		scale.z * Rotate.m[2][0], scale.z * Rotate.m[2][1], scale.z * Rotate.m[2][2], 0,
+		translate.x, translate.y, translate.z, 1
+
+	};
+
+	return result;
+}
+
 
 
 

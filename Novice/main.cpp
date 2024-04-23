@@ -14,14 +14,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = {0};
 
 	OwnMatrix4x4* ownMatrix4x4 = new OwnMatrix4x4();
-	
+
+	Vector3 scale{ 1.2f,0.79f,-2.1f };
 	Vector3 rotate{ 0.4f,1.43f,-0.8f };
-	Matrix4x4 rotateXMatrix = ownMatrix4x4->MakeRotateXMatrix(rotate.x);
-	Matrix4x4 rotateYMatrix = ownMatrix4x4->MakeRotateYMatrix(rotate.y);
-	Matrix4x4 rotateZMatrix = ownMatrix4x4->MakeRotateZMatrix(rotate.z);
-	Matrix4x4 RotateYZ = ownMatrix4x4->Multiply(rotateYMatrix, rotateZMatrix);
-	Matrix4x4 rotateXYZMatrix = ownMatrix4x4->Multiply(rotateXMatrix, RotateYZ);
-	
+	Vector3 translate{ 2.7f,-4.15f,1.57f };
+	Matrix4x4 worldMatrix = ownMatrix4x4->MakeAffineMatrix(scale, rotate, translate);
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -44,10 +41,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 	 
-		ownMatrix4x4->MatrixScreenPrintf(0, 0, rotateXMatrix, "rotateXMatrix");
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5, rotateYMatrix, "rotateYMatrix");
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 2, rotateZMatrix, "rotateZMatrix");
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 3, rotateXYZMatrix, "rotateXYZMatrix");
+		ownMatrix4x4->MatrixScreenPrintf(0, 0, worldMatrix, "worldMatrix");
 		///
 		/// ↑描画処理ここまで
 		///
