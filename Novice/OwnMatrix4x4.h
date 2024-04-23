@@ -1,6 +1,7 @@
 #pragma once
 #include "Functions.h"
 #include <Novice.h>
+#include <assert.h>
 
 
 class OwnMatrix4x4
@@ -17,12 +18,19 @@ class OwnMatrix4x4
 	Matrix4x4 Inverse(Matrix4x4& m1);
 
 	Matrix4x4 Transpose(Matrix4x4& m1);
+
 	Matrix4x4 MakeIdentify4x4();
 
+	Matrix4x4 MakeScaleMatrix(Vector3 &scale);
+
+	Matrix4x4 MakeTranslateMatrix(Vector3& transform);
+
+	Vector3 Transform(Vector3& vector, Matrix4x4& Matrix);
 
 
 	void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
 
+	void VectorScreenPrintf(int x, int y,const  Vector3& vector, const char* label);
 };
 
 

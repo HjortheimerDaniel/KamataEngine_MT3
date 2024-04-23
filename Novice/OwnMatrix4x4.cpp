@@ -114,6 +114,45 @@ Matrix4x4 OwnMatrix4x4::MakeIdentify4x4()
 	return result;
 }
 
+Matrix4x4 OwnMatrix4x4::MakeScaleMatrix(Vector3& scale)
+{
+	Matrix4x4 result{
+	scale.x, 0, 0, 0,
+	0, scale.y, 0, 0,
+	0, 0, scale.z, 0,
+	0, 0, 0, 1
+	};
+	return result;
+}
+
+Matrix4x4 OwnMatrix4x4::MakeTranslateMatrix(Vector3& translate)
+{
+	Matrix4x4 result {
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		translate.x, translate.y, translate.z, 1
+	};
+	return result;
+}
+
+Vector3 OwnMatrix4x4::Transform(Vector3& vector, Matrix4x4& Matrix)
+{
+	Vector3 result;
+
+	result.x = vector.x * Matrix.m[0][0] + vector.y * Matrix.m[1][0] + vector.z * Matrix.m[2][0] + 1.0f * Matrix.m[3][0];
+	result.y = vector.x * Matrix.m[0][1] + vector.y * Matrix.m[1][1] + vector.z * Matrix.m[2][1] + 1.0f * Matrix.m[3][1];
+	result.z = vector.x * Matrix.m[0][2] + vector.y * Matrix.m[1][2] + vector.z * Matrix.m[2][2] + 1.0f * Matrix.m[3][2];
+	float w = vector.x * Matrix.m[0][3] + vector.y * Matrix.m[1][3] + vector.z * Matrix.m[2][3] + 1.0f * Matrix.m[3][3];
+	assert(w != 0.0f);
+	result.x /= w;
+	result.y /= w;
+	result.z /= w;
+
+	return result;
+
+}
+
 
 void OwnMatrix4x4::MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label)
 {
@@ -128,6 +167,16 @@ void OwnMatrix4x4::MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, con
 
 	}
 }
+
+void OwnMatrix4x4::VectorScreenPrintf(int x, int y, const Vector3& vector, const char* label)
+{
+	Novice::ScreenPrintf(x, y, "%.02f", vector.x);
+	Novice::ScreenPrintf(x + kColumnWidth, y, "%.02f", vector.y);
+	Novice::ScreenPrintf(x + kColumnWidth * 2, y, "%.02f", vector.z);
+	Novice::ScreenPrintf(x + kColumnWidth * 4, y, "%s", label);
+}
+
+
 
 
 

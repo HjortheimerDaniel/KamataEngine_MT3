@@ -15,29 +15,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	OwnMatrix4x4* ownMatrix4x4 = new OwnMatrix4x4();
 	
-	Matrix4x4 m1 = {
-		3.2f, 0.7f, 9.6f, 4.4f,
-		5.5f, 1.3f, 7.8f, 2.1f,
-		6.9f, 8.0f, 2.6f, 1.0f,
-		0.5f, 7.2f, 5.1f, 3.3f
+
+	Vector3 translate{ 4.1f,2.6f,0.8f };
+	Vector3 scale{ 1.5f,5.2f,7.3f };
+	Matrix4x4 translateMatrix = ownMatrix4x4->MakeTranslateMatrix(translate);
+	Matrix4x4 scaleMatrix = ownMatrix4x4->MakeScaleMatrix(scale);
+	Vector3 point{ 2.3f, 3.8f,1.4f };
+	Matrix4x4 transformMatrix = {
+		1.0f, 2.0f, 3.0f, 4.0f,
+		3.0f, 1.0f, 1.0f, 2.0f,
+		1.0f, 4.0f, 2.0f, 3.0f,
+		2.0f, 2.0f, 1.0f, 3.0f
 	};
 
-	Matrix4x4 m2 = {
-		4.1f, 6.5f, 3.3f, 2.2f,
-		8.8f, 0.6f, 9.9f, 7.7f,
-		1.1f, 5.5f, 6.6f, 0.0f,
-		3.3f, 9.9f, 8.8f, 2.2f
-	};
-
-	Matrix4x4 resultAdd = ownMatrix4x4->Add(m1, m2);
-	Matrix4x4 resultSubtract = ownMatrix4x4->Subtract(m1, m2);
-	Matrix4x4 resultMultiply = ownMatrix4x4->Multiply(m1, m2);
-	Matrix4x4 inverseM1 = ownMatrix4x4->Inverse(m1);
-	Matrix4x4 inverseM2 = ownMatrix4x4->Inverse(m2);
-	Matrix4x4 transposeM1 = ownMatrix4x4->Transpose(m1);
-	Matrix4x4 transposeM2 = ownMatrix4x4->Transpose(m2);
-	Matrix4x4 identify = ownMatrix4x4->MakeIdentify4x4();
-	
+	Vector3 transformed = ownMatrix4x4->Transform(point, transformMatrix);
 	
 	
 
@@ -61,14 +52,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-		ownMatrix4x4->MatrixScreenPrintf(0, 0, resultAdd, "Add");
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5, resultSubtract, "Subtract");
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 2, resultMultiply, "Multiply");
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 3, inverseM1, "InverseM1");
-		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 5 * 4, inverseM2, "InverseM2");
-		ownMatrix4x4->MatrixScreenPrintf(kColumnWidth * 5, 0, transposeM1, "TransposeM1");
-		ownMatrix4x4->MatrixScreenPrintf(kColumnWidth * 5, kColumnHeight * 5, transposeM2, "TransposeM2");
-		ownMatrix4x4->MatrixScreenPrintf(kColumnWidth * 5, kColumnHeight * 5 * 2, identify, "Identify");
+	 
+		ownMatrix4x4->VectorScreenPrintf(0, 0, transformed, "transformed");
+		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight, translateMatrix, "translateMatrix");
+		ownMatrix4x4->MatrixScreenPrintf(0, kColumnHeight * 6, scaleMatrix, "scaleMatrix");
 		///
 		/// ↑描画処理ここまで
 		///
