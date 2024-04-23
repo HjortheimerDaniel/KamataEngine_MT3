@@ -2,6 +2,7 @@
 #include "Functions.h"
 #include <Novice.h>
 #include <assert.h>
+#include <cmath>
 
 
 class OwnMatrix4x4
@@ -31,6 +32,13 @@ class OwnMatrix4x4
 	void MatrixScreenPrintf(int x, int y, const Matrix4x4& matrix, const char* label);
 
 	void VectorScreenPrintf(int x, int y,const  Vector3& vector, const char* label);
+
+	Matrix4x4 MakeRotateXMatrix(float radian);
+
+	Matrix4x4 MakeRotateYMatrix(float radian);
+
+	Matrix4x4 MakeRotateZMatrix(float radian);
+
 };
 
 

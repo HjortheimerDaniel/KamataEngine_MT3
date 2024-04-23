@@ -176,6 +176,39 @@ void OwnMatrix4x4::VectorScreenPrintf(int x, int y, const Vector3& vector, const
 	Novice::ScreenPrintf(x + kColumnWidth * 4, y, "%s", label);
 }
 
+Matrix4x4 OwnMatrix4x4::MakeRotateXMatrix(float radian)
+{
+	Matrix4x4 result{
+		1, 0, 0, 0,
+		0, std::cos(radian), std::sin(radian), 0,
+		0, -std::sin(radian), std::cos(radian), 0,
+		0, 0, 0, 1
+	};
+	return result;
+}
+
+Matrix4x4 OwnMatrix4x4::MakeRotateYMatrix(float radian)
+{
+	Matrix4x4 result{
+		 std::cos(radian), 0, -std::sin(radian), 0,
+		0, 1, 0, 0,
+		std::sin(radian), 0, std::cos(radian), 0,
+		0, 0, 0, 1
+	};
+	return result;
+}
+
+Matrix4x4 OwnMatrix4x4::MakeRotateZMatrix(float radian)
+{
+	Matrix4x4 result{
+		 std::cos(radian), std::sin(radian), 0, 0,
+		-std::sin(radian),  std::cos(radian), 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1
+	};
+	return result;
+}
+
 
 
 
