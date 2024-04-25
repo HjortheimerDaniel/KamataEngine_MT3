@@ -59,7 +59,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		if (keys[DIK_D]) {
 			translate.x += 0.05f;
-			translate.z += 0.05f;
 		}
 
 		if (keys[DIK_A]) {
