@@ -77,8 +77,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		Novice::DrawTriangle((int)screenVertices[0].x, (int)screenVertices[0].y, (int)screenVertices[1].x, (int)screenVertices[1].y, (int)screenVertices[2].x, (int)screenVertices[2].y, RED, kFillModeSolid);
+		
 		ownMatrix4x4->VectorScreenPrintf(0, 0, cross, "Cross");
-
+		
 		///
 		/// ↑描画処理ここまで
 		///
