@@ -20,6 +20,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraPosition = { 0,0,-10.0f };
 	Vector3 kLocalVertices[3]{ { 0, 1, 0 }, {1,-1,0}, {-1,-1,0} };
 
+	Vector3 v1{ 1.2f, -3.9f, 2.5f };
+	Vector3 v2{ 2.8f, 0.4f, -1.3f };
+	Vector3 cross = ownMatrix4x4->Cross(v1, v2);
 	
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -74,7 +77,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		Novice::DrawTriangle((int)screenVertices[0].x, (int)screenVertices[0].y, (int)screenVertices[1].x, (int)screenVertices[1].y, (int)screenVertices[2].x, (int)screenVertices[2].y, RED, kFillModeSolid);
-
+		ownMatrix4x4->VectorScreenPrintf(0, 0, cross, "Cross");
 
 		///
 		/// ↑描画処理ここまで
