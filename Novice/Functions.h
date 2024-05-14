@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector4.h"
 
 static const int kColumnWidth = 60;
 static const int kColumnHeight = 20;
@@ -11,4 +12,9 @@ struct Vector3 {
 
 struct Matrix4x4 {
 	float m[4][4];
+};
+
+struct Sphere {
+	Vector3 center;
+	float radius;
 };
