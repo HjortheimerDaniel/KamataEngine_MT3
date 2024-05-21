@@ -15,7 +15,11 @@ public:
 
 	Matrix4x4 Add(Matrix4x4& m1, Matrix4x4& m2);
 
+	Vector3 Add(const Vector3& v1, const Vector3& v2);
+
 	Matrix4x4 Subtract(Matrix4x4& m1, Matrix4x4& m2);
+
+	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 
 	Matrix4x4 Multiply(Matrix4x4& m1, Matrix4x4& m2);
 
@@ -50,4 +54,8 @@ public:
 	Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 
 	Vector3 Cross(const Vector3& v1, const Vector3& v2);
+
+	Vector3 Project(const Vector3& v1,const Vector3& v2);
+
+	Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
 };

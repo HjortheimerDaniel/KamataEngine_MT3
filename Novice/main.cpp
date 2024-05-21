@@ -23,12 +23,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector3 cameraTranslate{ 0.0f,1.9f, -6.49f };
 	Vector3 cameraPosition = { 0,0,-10.0f };
 
+	Segment segment
+	{
+		{-2.0f, -1.0f, 0.0f}, //origin
+		{3.0f, 2.0f, 2.0f} //diff
+	};
+
+	Vector3 point{ -1.5f, 0.6f, 0.6f };
 	
 	
-	//Vector3 kLocalVertices[3]{ { 0, 1, 0 }, {1,-1,0}, {-1,-1,0} };
-	//Vector3 v1{ 1.2f, -3.9f, 2.5f };
-	//Vector3 v2{ 2.8f, 0.4f, -1.3f };
-	//Vector3 cross = ownMatrix4x4->Cross(v1, v2);
 	
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -49,39 +52,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 viewMatrixProjectionMatrix = ownMatrix4x4->Multiply(viewMatrix, projectionMatrix);
 		Matrix4x4 worldViewProjectionMatrix = ownMatrix4x4->Multiply(worldMatrix, viewMatrixProjectionMatrix);
 		Matrix4x4 viewportMatrix = ownMatrix4x4->MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
+		Vector3 start = ownMatrix4x4->Transform(ownMatrix4x4->Transform(segment.origin, viewMatrixProjectionMatrix), viewportMatrix);
+		Vector3 end =ownMatrix4x4->Transform(ownMatrix4x4->Transform(ownMatrix4x4->Add(segment.origin, segment.diff), viewMatrixProjectionMatrix), viewportMatrix);
+
+		Vector3 project = ownMatrix4x4->Project(ownMatrix4x4->Subtract(point, segment.origin), segment.diff);
+		Vector3 closestPoint = ownMatrix4x4->ClosestPoint(point, segment);
+		Sphere pointSphere{ point, 0.01f };
+		Sphere closestPointSphere{ closestPoint, 0.01f };
 		
-		ImGui::Begin("Window");
-		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
-		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
-		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
-		ImGui::End();
-
-		//Vector3 screenVertices[3];
-		//for (uint32_t i = 0; i < 3; i++)
-		//{
-		//	Vector3 ndcVertex = ownMatrix4x4->Transform(kLocalVertices[i], worldViewProjectionMatrix);
-		//	screenVertices[i] = ownMatrix4x4->Transform(ndcVertex, viewportMatrix);
-		//}
-		//rotate.y+= 0.05f;
-		//
-		//if (keys[DIK_W]) {;
-		//	translate.z += 0.05f;
-		//}
-		//
-		//if (keys[DIK_S]) {
-		//	;
-		//	translate.z -= 0.05f;
-		//}
-		//
-		//if (keys[DIK_D]) {
-		//	translate.x += 0.05f;
-		//}
-		//
-		//if (keys[DIK_A]) {
-		//	translate.x -= 0.05f;
-		//}
-
 		///
 		/// ↑更新処理ここまで
 		///
@@ -91,12 +69,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		ownMatrix4x4->DrawGrid(viewMatrixProjectionMatrix, viewportMatrix);
-		ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, BLACK);
+		Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, WHITE);
 
-		//Novice::DrawTriangle((int)screenVertices[0].x, (int)screenVertices[0].y, (int)screenVertices[1].x, (int)screenVertices[1].y, (int)screenVertices[2].x, (int)screenVertices[2].y, RED, kFillModeSolid);
-		//ownMatrix4x4->VectorScreenPrintf(0, 0, cross, "Cross");
-
-
+		ownMatrix4x4->DrawSphere(pointSphere, viewMatrixProjectionMatrix, viewportMatrix, RED);
+		ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, BLACK);
+		ImGui::Begin("Window");
+		ImGui::DragFloat3("cameraTranslate", &cameraTranslate.x, 0.01f);
+		ImGui::DragFloat3("Point", &point.x, 0.3f);
+		ImGui::DragFloat3("Segment origin", &segment.origin.x, 0.3f);
+		ImGui::DragFloat3("Segment diff", &segment.diff.x, 0.3f);
+		ImGui::DragFloat3("Project", &project.x, 0.3f);
+		ImGui::DragFloat3("closestPoint", &closestPoint.x, 0.3f);
+		ImGui::End();
 		///
 		/// ↑描画処理ここまで
 		///

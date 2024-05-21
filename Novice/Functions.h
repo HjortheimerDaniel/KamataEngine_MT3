@@ -18,3 +18,18 @@ struct Sphere {
 	Vector3 center;
 	float radius;
 };
+
+struct Line {
+	Vector3 origin; //start point
+	Vector3 diff; //difference between start and end
+};
+
+struct Ray {
+	Vector3 origin; //start point
+	Vector3 diff; //difference between start and end
+};
+
+struct Segment {
+	Vector3 origin; //start point
+	Vector3 diff; //difference between start and end
+};
