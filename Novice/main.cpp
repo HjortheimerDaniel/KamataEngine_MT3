@@ -17,8 +17,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Sphere sphere
 	{
 		0,0,0, //center
-		1 // radius
+		1, // radius
+		(int)WHITE, 
 	};
+
+	Sphere sphere2
+	{
+		1.6f, 0,0,
+		0.3f,
+		(int)WHITE
+	};
+
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
 	Vector3 cameraTranslate{ 0.0f,1.9f, -6.49f };
 	Vector3 cameraPosition = { 0,0,-10.0f };
@@ -60,6 +69,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Sphere pointSphere{ point, 0.01f };
 		Sphere closestPointSphere{ closestPoint, 0.01f };
 		
+		if(ownMatrix4x4->IsCollision(sphere, sphere2))
+		{
+			sphere.color = RED;
+		}
+		else 
+		{
+			sphere.color = WHITE;
+		}
+
 		///
 		/// ↑更新処理ここまで
 		///
@@ -69,17 +87,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		ownMatrix4x4->DrawGrid(viewMatrixProjectionMatrix, viewportMatrix);
-		Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, WHITE);
+		//Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, WHITE);
 
-		ownMatrix4x4->DrawSphere(pointSphere, viewMatrixProjectionMatrix, viewportMatrix, RED);
-		ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, BLACK);
+		//ownMatrix4x4->DrawSphere(pointSphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
+		//ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, WHITE);
+		ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
+		ownMatrix4x4->DrawSphere(sphere2, viewMatrixProjectionMatrix, viewportMatrix, sphere2.color);
 		ImGui::Begin("Window");
-		ImGui::DragFloat3("cameraTranslate", &cameraTranslate.x, 0.01f);
-		ImGui::DragFloat3("Point", &point.x, 0.3f);
-		ImGui::DragFloat3("Segment origin", &segment.origin.x, 0.3f);
-		ImGui::DragFloat3("Segment diff", &segment.diff.x, 0.3f);
-		ImGui::DragFloat3("Project", &project.x, 0.3f);
-		ImGui::DragFloat3("closestPoint", &closestPoint.x, 0.3f);
+		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
+		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
+		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
 		ImGui::End();
 		///
 		/// ↑描画処理ここまで

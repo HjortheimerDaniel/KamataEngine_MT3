@@ -396,3 +396,25 @@ Vector3 OwnMatrix4x4::ClosestPoint(const Vector3& point, const Segment& segment)
 	Vector3 project= Project(Subtract(point, segment.origin), segment.diff);
 	return Add(segment.origin, project);
 }
+
+bool OwnMatrix4x4::IsCollision(const Sphere& s1, const Sphere& s2)
+{
+	float distance = Length(s1.center, s2.center);
+	if (distance <= s1.radius + s2.radius) {
+		return true;
+	}
+	return false;
+}
+
+float OwnMatrix4x4::Length(const Vector3& point1, const Vector3& point2)
+{
+	Vector3 difference;
+	difference.x = point1.x - point2.x;
+	difference.y = point1.y - point2.y;
+	difference.z = point1.z - point2.z;
+
+	return sqrtf(difference.x * difference.x + difference.y * difference.y + difference.z * difference.z);
+}
+
+
+

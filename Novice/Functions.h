@@ -17,6 +17,7 @@ struct Matrix4x4 {
 struct Sphere {
 	Vector3 center;
 	float radius;
+	int color;
 };
 
 struct Line {
