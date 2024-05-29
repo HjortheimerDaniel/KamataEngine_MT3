@@ -23,6 +23,10 @@ public:
 
 	Matrix4x4 Multiply(Matrix4x4& m1, Matrix4x4& m2);
 
+	Vector3 Multiply(Vector3& v1, Vector3& v2);
+
+	Vector3 Multiply(const float& f, const Vector3& v1);
+
 	Matrix4x4 Inverse(Matrix4x4& m1);
 
 	Matrix4x4 Transpose(Matrix4x4& m1);
@@ -61,5 +65,16 @@ public:
 
 	bool IsCollision(const Sphere& s1, const Sphere& s2);
 
+	bool IsCollision(const Sphere& sphere, const Plane& plane);
+
 	float Length(const Vector3& point1, const Vector3& point2);
+
+	Vector3 Perpendicular(const Vector3& vector);
+
+	void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color, uint32_t color2, uint32_t color3, uint32_t color4);
+
+	Vector3 Normalize(Vector3 v);
+
+
+
 };

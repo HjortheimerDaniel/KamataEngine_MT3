@@ -20,6 +20,11 @@ struct Sphere {
 	int color;
 };
 
+struct Plane {
+	Vector3 normal;
+	float distance;
+};
+
 struct Line {
 	Vector3 origin; //start point
 	Vector3 diff; //difference between start and end

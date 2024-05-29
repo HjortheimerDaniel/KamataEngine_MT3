@@ -142,6 +142,28 @@ Matrix4x4 OwnMatrix4x4::Multiply(Matrix4x4& m1, Matrix4x4& m2) {
 	return result;
 }
 
+Vector3 OwnMatrix4x4::Multiply(Vector3& v1, Vector3& v2)
+{
+	Vector3 result
+	{
+		v1.x * v2.x,
+		v1.y * v2.y,
+		v1.z * v2.z
+	};
+	return result;
+}
+
+Vector3 OwnMatrix4x4::Multiply(const float& f, const Vector3& v1)
+{
+	Vector3 result
+	{
+		f * v1.x,
+		f * v1.y,
+		f * v1.z
+	};
+	return result;
+}
+
 Matrix4x4 OwnMatrix4x4::Inverse(Matrix4x4& m1) {
 	float A = m1.m[0][0] * m1.m[1][1] * m1.m[2][2] * m1.m[3][3] + m1.m[0][0] * m1.m[1][2] * m1.m[2][3] * m1.m[3][1] + m1.m[0][0] * m1.m[1][3] * m1.m[2][1] * m1.m[3][2] -
 	          m1.m[0][0] * m1.m[1][3] * m1.m[2][2] * m1.m[3][1] - m1.m[0][0] * m1.m[1][2] * m1.m[2][1] * m1.m[3][3] - m1.m[0][0] * m1.m[1][1] * m1.m[2][3] * m1.m[3][2] -
@@ -278,19 +300,6 @@ Matrix4x4 OwnMatrix4x4::MakeRotateZMatrix(float radian) {
 }
 
 Matrix4x4 OwnMatrix4x4::MakeAffineMatrix(const Vector3& scale, const Vector3& rot, const Vector3& translate) {
-	// Matrix4x4 Scale{
-	//	scale.x, 0, 0, 0,
-	//	0, scale.y, 0, 0,
-	//	0, 0, scale.z, 0,
-	//	0, 0, 0, 1
-	// };
-	//
-	// Matrix4x4 Translate{
-	//	1, 0, 0, 0,
-	//	0, 1, 0, 0,
-	//	0, 0, 1, 0,
-	//	translate.x, translate.y, translate.z, 1
-	// };
 
 	Matrix4x4 MakeRotateMatrixZ{std::cos(rot.z), std::sin(rot.z), 0, 0, -std::sin(rot.z), std::cos(rot.z), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
@@ -299,11 +308,9 @@ Matrix4x4 OwnMatrix4x4::MakeAffineMatrix(const Vector3& scale, const Vector3& ro
 	Matrix4x4 MakeRotateMatrixY{std::cos(rot.y), 0, -std::sin(rot.y), 0, 0, 1, 0, 0, std::sin(rot.y), 0, std::cos(rot.y), 0, 0, 0, 0, 1};
 
 	Matrix4x4 RotateYZ = Multiply(MakeRotateMatrixY, MakeRotateMatrixZ);
-	//
-	Matrix4x4 Rotate = Multiply(MakeRotateMatrixX, RotateYZ);
-	// Matrix4x4 ScaleRotate = Multiply(Scale, Rotate);
-	// Matrix4x4 result = Multiply(Translate, ScaleRotate);
 
+	Matrix4x4 Rotate = Multiply(MakeRotateMatrixX, RotateYZ);
+	
 	Matrix4x4 result{
 	    scale.x * Rotate.m[0][0],
 	    scale.x * Rotate.m[0][1],
@@ -406,6 +413,11 @@ bool OwnMatrix4x4::IsCollision(const Sphere& s1, const Sphere& s2)
 	return false;
 }
 
+//bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
+//{
+//	return false;
+//}
+
 float OwnMatrix4x4::Length(const Vector3& point1, const Vector3& point2)
 {
 	Vector3 difference;
@@ -414,6 +426,49 @@ float OwnMatrix4x4::Length(const Vector3& point1, const Vector3& point2)
 	difference.z = point1.z - point2.z;
 
 	return sqrtf(difference.x * difference.x + difference.y * difference.y + difference.z * difference.z);
+}
+
+Vector3 OwnMatrix4x4::Perpendicular(const Vector3& vector)
+{
+	if(vector.x != 0.0f || vector.y != 0.0f)
+	{
+		return { -vector.y, vector.x, 0.0f };
+	}
+	return { 0.0f, -vector.z, vector.y };
+}
+
+void OwnMatrix4x4::DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color, uint32_t color2, uint32_t color3, uint32_t color4)
+{
+
+	Vector3 center = Multiply(plane.distance, plane.normal);
+	Vector3 perpendiculars[4];
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal));
+	perpendiculars[1] = { -perpendiculars[0].x, -perpendiculars[0].y, -perpendiculars[0].z };
+	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]);
+	perpendiculars[3] = { -perpendiculars[2].x, -perpendiculars[2].y, -perpendiculars[2].z };
+
+	Vector3 points[4];
+	for (int32_t index = 0; index < 4; index++)
+	{
+		Vector3 extend = Multiply(2.0f, perpendiculars[index]);
+		Vector3 point = Add(center, extend);
+		points[index] = Transform(Transform(point, viewProjectionMatrix), viewPortMatrix);
+	}
+	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[2].x, (int)points[2].y, color);//white
+	Novice::DrawLine((int)points[2].x, (int)points[2].y, (int)points[1].x, (int)points[1].y, color2);//red
+	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color3);//blue
+	Novice::DrawLine((int)points[3].x, (int)points[3].y, (int)points[0].x, (int)points[0].y, color4);//green
+}
+
+Vector3 OwnMatrix4x4::Normalize(Vector3 v)
+{
+	float normalize(v.x * v.x + v.y * v.y + v.z * v.z);
+
+	if (normalize != 0) 
+	{
+		return Vector3(v.x / normalize, v.y / normalize, v.z / normalize);
+	}
+	return v;
 }
 
 
