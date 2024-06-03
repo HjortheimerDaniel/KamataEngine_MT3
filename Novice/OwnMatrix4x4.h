@@ -75,6 +75,8 @@ public:
 
 	Vector3 Normalize(Vector3 v);
 
+	float Dot(Vector3 v1, Vector3 v2);
+
 
 
 };

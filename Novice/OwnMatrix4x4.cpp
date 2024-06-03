@@ -413,6 +413,17 @@ bool OwnMatrix4x4::IsCollision(const Sphere& s1, const Sphere& s2)
 	return false;
 }
 
+bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
+{
+	float distance = Dot(plane.normal, sphere.center) - plane.distance;
+	
+	if (distance <= sphere.radius && distance >= -sphere.radius)
+	{
+		return true;
+	}
+	return false;
+}
+
 //bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
 //{
 //	return false;
@@ -455,9 +466,9 @@ void OwnMatrix4x4::DrawPlane(const Plane& plane, const Matrix4x4& viewProjection
 		points[index] = Transform(Transform(point, viewProjectionMatrix), viewPortMatrix);
 	}
 	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[2].x, (int)points[2].y, color);//white
-	Novice::DrawLine((int)points[2].x, (int)points[2].y, (int)points[1].x, (int)points[1].y, color2);//red
-	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color3);//blue
-	Novice::DrawLine((int)points[3].x, (int)points[3].y, (int)points[0].x, (int)points[0].y, color4);//green
+	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[2].x, (int)points[2].y, color2);//red
+	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[3].x, (int)points[3].y, color3);//blue
+	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color4);//green
 }
 
 Vector3 OwnMatrix4x4::Normalize(Vector3 v)
@@ -469,6 +480,12 @@ Vector3 OwnMatrix4x4::Normalize(Vector3 v)
 		return Vector3(v.x / normalize, v.y / normalize, v.z / normalize);
 	}
 	return v;
+}
+
+float OwnMatrix4x4::Dot(Vector3 v1, Vector3 v2)
+{
+	float result = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+	return result;
 }
 
 

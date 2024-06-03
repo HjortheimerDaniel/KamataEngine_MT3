@@ -30,8 +30,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Plane plane
 	{
-		2.f,2.f,2.f,
-		0.3f
+		0.0f,1.0f,0.0f,
+		1.0f
 	};
 
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
@@ -97,14 +97,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//ownMatrix4x4->DrawSphere(pointSphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
 		//ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, WHITE);
-		//ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
+		ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
 		//ownMatrix4x4->DrawSphere(sphere2, viewMatrixProjectionMatrix, viewportMatrix, sphere2.color);
+		if(ownMatrix4x4->IsCollision(sphere, plane))
+		{
+			sphere.color = RED;
+		}
+		else {
+			sphere.color = WHITE;
+
+		}
 		ownMatrix4x4->DrawPlane(plane, viewMatrixProjectionMatrix, viewportMatrix, WHITE, RED, BLUE, GREEN);
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
 		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
 		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
+		ImGui::DragFloat("Plane", &plane.distance, 0.01f);
+		ImGui::DragFloat3("Plane", &plane.normal.x, 0.01f);
 		ImGui::End();
 		///
 		/// ↑描画処理ここまで
