@@ -38,4 +38,5 @@ struct Ray {
 struct Segment {
 	Vector3 origin; //start point
 	Vector3 diff; //difference between start and end
+	int color;
 };

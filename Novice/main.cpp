@@ -41,10 +41,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Segment segment
 	{
 		{-2.0f, -1.0f, 0.0f}, //origin
-		{3.0f, 2.0f, 2.0f} //diff
+		{3.0f, 2.0f, 2.0f}, //diff
+		(int)WHITE
+
 	};
 
-	Vector3 point{ -1.5f, 0.6f, 0.6f };
+	//Vector3 point{ -1.5f, 0.6f, 0.6f };
 	
 	
 	
@@ -70,19 +72,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Vector3 start = ownMatrix4x4->Transform(ownMatrix4x4->Transform(segment.origin, viewMatrixProjectionMatrix), viewportMatrix);
 		Vector3 end =ownMatrix4x4->Transform(ownMatrix4x4->Transform(ownMatrix4x4->Add(segment.origin, segment.diff), viewMatrixProjectionMatrix), viewportMatrix);
 
-		Vector3 project = ownMatrix4x4->Project(ownMatrix4x4->Subtract(point, segment.origin), segment.diff);
-		Vector3 closestPoint = ownMatrix4x4->ClosestPoint(point, segment);
-		Sphere pointSphere{ point, 0.01f };
-		Sphere closestPointSphere{ closestPoint, 0.01f };
+
+		//Vector3 project = ownMatrix4x4->Project(ownMatrix4x4->Subtract(point, segment.origin), segment.diff);
+		//Vector3 closestPoint = ownMatrix4x4->ClosestPoint(point, segment);
+		//Sphere pointSphere{ point, 0.01f };
+		//Sphere closestPointSphere{ closestPoint, 0.01f };
 		
-		/*if(ownMatrix4x4->IsCollision(sphere, sphere2))
+		if(ownMatrix4x4->IsCollision(segment, plane))
 		{
-			sphere.color = RED;
+			segment.color = RED;
 		}
 		else 
 		{
-			sphere.color = WHITE;
-		}*/
+			segment.color = WHITE;
+		}
 
 		///
 		/// ↑更新処理ここまで
@@ -93,28 +96,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		//ownMatrix4x4->DrawGrid(viewMatrixProjectionMatrix, viewportMatrix);
-		//Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, WHITE);
+		Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, segment.color);
 
 		//ownMatrix4x4->DrawSphere(pointSphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
 		//ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, WHITE);
-		ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
+		//ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
 		//ownMatrix4x4->DrawSphere(sphere2, viewMatrixProjectionMatrix, viewportMatrix, sphere2.color);
-		if(ownMatrix4x4->IsCollision(sphere, plane))
+		/*if(ownMatrix4x4->IsCollision(sphere, plane))
 		{
 			sphere.color = RED;
 		}
 		else {
 			sphere.color = WHITE;
 
-		}
+		}*/
 		ownMatrix4x4->DrawPlane(plane, viewMatrixProjectionMatrix, viewportMatrix, WHITE, RED, BLUE, GREEN);
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
-		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
+		//ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
+		//ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
 		ImGui::DragFloat("Plane", &plane.distance, 0.01f);
 		ImGui::DragFloat3("Plane", &plane.normal.x, 0.01f);
+		ImGui::DragFloat3("Line", &segment.origin.x, 0.01f);
+		ImGui::DragFloat3("Line diff", &segment.diff.x, 0.01f);
 		ImGui::End();
 		///
 		/// ↑描画処理ここまで

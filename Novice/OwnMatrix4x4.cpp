@@ -424,6 +424,30 @@ bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
 	return false;
 }
 
+bool OwnMatrix4x4::IsCollision(const Segment& segment, const Plane& plane)
+{
+	float dot = Dot(plane.normal, segment.diff);
+	if (dot <= 0.0f)
+	{
+		return false;
+	}
+	float t = (plane.distance - Dot(segment.origin, plane.normal)) / dot;
+
+	
+	Novice::ScreenPrintf(0, 0, "T = %f", t);
+
+	if (t >= 0.0f && t <= 1.0f)
+	{
+
+		return true;
+	}
+	
+	return false;
+	
+}
+
+
+
 //bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
 //{
 //	return false;
