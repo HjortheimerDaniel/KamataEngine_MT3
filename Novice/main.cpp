@@ -40,8 +40,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Segment segment
 	{
-		{-2.0f, -1.0f, 0.0f}, //origin
-		{3.0f, 2.0f, 2.0f}, //diff
+		{0.0f, 0.1f, -2.0f}, //origin
+		{1.0f, -0.4f, 2.0f}, //diff
 		(int)WHITE
 
 	};
@@ -96,7 +96,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		
 		//ownMatrix4x4->DrawGrid(viewMatrixProjectionMatrix, viewportMatrix);
-		Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, segment.color);
 
 		//ownMatrix4x4->DrawSphere(pointSphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
 		//ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, WHITE);
@@ -111,6 +110,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		}*/
 		ownMatrix4x4->DrawPlane(plane, viewMatrixProjectionMatrix, viewportMatrix, WHITE, RED, BLUE, GREEN);
+		Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, segment.color);
+
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);

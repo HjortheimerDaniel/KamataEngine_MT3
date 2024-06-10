@@ -427,7 +427,7 @@ bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
 bool OwnMatrix4x4::IsCollision(const Segment& segment, const Plane& plane)
 {
 	float dot = Dot(plane.normal, segment.diff);
-	if (dot <= 0.0f)
+	if (dot == 0.0f)
 	{
 		return false;
 	}
