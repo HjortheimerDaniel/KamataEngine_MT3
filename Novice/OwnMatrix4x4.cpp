@@ -634,20 +634,20 @@ void OwnMatrix4x4::DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMat
 		screenCorners[i] = Transform(temp, viewPortMatrix);
 	}
 
-	//int edges[12][2] = {
-    //    {0, 1}, {1, 3}, {3, 2}, {2, 0}, // Bottom face
-    //    {4, 5}, {5, 7}, {7, 6}, {6, 4}, // Top face
-    //    {0, 4}, {1, 5}, {2, 6}, {3, 7}  // Vertical edges
-    //};
-	//
-    //// Draw the edges
-    //for (int i = 0; i < 12; ++i) {
-    //    Vector3 start = screenCorners[edges[i][0]];
-    //    Vector3 end = screenCorners[edges[i][1]];
-    //    Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, color);
-    //}
+	int edges[12][2] = {
+        {0, 1}, {1, 3}, {3, 2}, {2, 0}, // Bottom face
+        {4, 5}, {5, 7}, {7, 6}, {6, 4}, // Top face
+        {0, 4}, {1, 5}, {2, 6}, {3, 7}  // Vertical edges
+    };
+	
+    // Draw the edges
+    for (int i = 0; i < 12; ++i) {
+        Vector3 start = screenCorners[edges[i][0]];
+        Vector3 end = screenCorners[edges[i][1]];
+        Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, color);
+    }
 
-	Novice::DrawLine((int).x, (int)start.y, (int)end.x, (int)end.y, color);
+	//Novice::DrawLine((int).x, (int)start.y, (int)end.x, (int)end.y, color);
 
 
 	//Vector3 aabbMin = Transform(aabb.min, viewProjectionMatrix);
