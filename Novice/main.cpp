@@ -14,12 +14,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = {0};
 
 	OwnMatrix4x4* ownMatrix4x4 = new OwnMatrix4x4();
-	Sphere sphere
-	{
-		0,0,0, //center
-		1, // radius
-		(int)WHITE, 
-	};
+	
+	//Sphere sphere
+	//{
+	//	0,0,0, //center
+	//	1, // radius
+	//	(int)WHITE, 
+	//};
 
 	/*Sphere sphere2
 	{
@@ -28,11 +29,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		(int)WHITE
 	};*/
 
-	Plane plane
+	/*Plane plane
 	{
 		0.0f,1.0f,0.0f,
 		1.0f
-	};
+	};*/
 
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
 	Vector3 cameraTranslate{ 0.0f,1.9f, -6.49f };
@@ -40,10 +41,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	Segment segment
 	{
-		{0.0f, 0.1f, -2.0f}, //origin
+		{0.0f, 0.1f, -0.5f}, //origin
 		{1.0f, -0.4f, 2.0f}, //diff
 		(int)WHITE
 
+	};
+
+	Triangle triangle
+	{
+		{0.0f,1.0f,0.0f,
+		1.0f,-1.0f,0.0f,
+		-1.0f,-1.0f,0.0f},
+		(int)WHITE
 	};
 
 	//Vector3 point{ -1.5f, 0.6f, 0.6f };
@@ -78,7 +87,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Sphere pointSphere{ point, 0.01f };
 		//Sphere closestPointSphere{ closestPoint, 0.01f };
 		
-		if(ownMatrix4x4->IsCollision(segment, plane))
+		if(ownMatrix4x4->IsCollision(segment, triangle))
 		{
 			segment.color = RED;
 		}
@@ -109,7 +118,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			sphere.color = WHITE;
 
 		}*/
-		ownMatrix4x4->DrawPlane(plane, viewMatrixProjectionMatrix, viewportMatrix, WHITE, RED, BLUE, GREEN);
+		ownMatrix4x4->DrawTriangle(triangle, viewMatrixProjectionMatrix, viewportMatrix, triangle.color);
 		Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, segment.color);
 
 		ImGui::Begin("Window");
@@ -117,8 +126,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
 		//ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
 		//ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
-		ImGui::DragFloat("Plane", &plane.distance, 0.01f);
-		ImGui::DragFloat3("Plane", &plane.normal.x, 0.01f);
+		ImGui::DragFloat("Triangle 0", &triangle.vertices[0].x, 0.01f);
+		ImGui::DragFloat3("Triangle 1", &triangle.vertices[1].x, 0.01f);
+		ImGui::DragFloat3("Triangle 2", &triangle.vertices[2].x, 0.01f);
 		ImGui::DragFloat3("Line", &segment.origin.x, 0.01f);
 		ImGui::DragFloat3("Line diff", &segment.diff.x, 0.01f);
 		ImGui::End();

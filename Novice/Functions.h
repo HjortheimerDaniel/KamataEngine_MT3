@@ -40,3 +40,8 @@ struct Segment {
 	Vector3 diff; //difference between start and end
 	int color;
 };
+
+struct Triangle {
+	Vector3 vertices[3];
+	int color;
+};

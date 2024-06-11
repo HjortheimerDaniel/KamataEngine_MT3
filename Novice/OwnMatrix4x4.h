@@ -69,11 +69,15 @@ public:
 
 	bool IsCollision(const Segment& segment, const Plane& plane);
 
+	bool IsCollision(const Segment& segment, const Triangle& triangle);
+
 	float Length(const Vector3& point1, const Vector3& point2);
 
 	Vector3 Perpendicular(const Vector3& vector);
 
 	void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color, uint32_t color2, uint32_t color3, uint32_t color4);
+
+	void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color);
 
 	Vector3 Normalize(Vector3 v);
 

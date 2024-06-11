@@ -446,6 +446,99 @@ bool OwnMatrix4x4::IsCollision(const Segment& segment, const Plane& plane)
 	
 }
 
+bool OwnMatrix4x4::IsCollision(const Segment& segment, const Triangle& triangle)
+{
+	Vector3 v0 = triangle.vertices[0];
+	Vector3 v1 = triangle.vertices[1];
+	Vector3 v2 = triangle.vertices[2];
+
+	Vector3 v01 = //edge from vertex v0 to vertex v1
+	{
+		v0.x - v1.x,
+		v0.y - v1.y,
+		v0.z - v1.z
+	};
+	Vector3 v20 = //edge from vertex v2 to vertex v0
+	{
+		v2.x - v0.x,
+		v2.y - v0.y,
+		v2.z - v0.z
+	};
+
+	Vector3 v12 = //edge from vertex v1 to vertex v2
+	{
+		v1.x - v2.x,
+		v1.y - v2.y,
+		v1.z - v2.z
+	};
+
+	Vector3 normal = Cross(v01, v20); //cross the edges
+
+	Vector3 segmentToPlane = //Vector between the line and edge v0 of the triangle
+	{
+		v0.x - segment.origin.x,
+		v0.y - segment.origin.y,
+		v0.z - segment.origin.z
+	};
+
+	float denom = Dot(segment.diff, normal); //dot product of the line and the crossed edges
+
+	if(denom == 0.0f) //if the dot product is zero we are not colliding
+	{
+		return false;
+	}
+
+	float t = Dot(segmentToPlane, normal) / denom; //determine intersection point, if we are between 0 and 1 we are colliding
+
+	if (t < 0.0f || t > 1.0f)  //if were not between 0 and 1
+	{
+		return false;
+
+	}
+
+	Vector3 intersection = //calculate the lines start and end with the intersection points
+	{
+		{segment.origin.x + t * segment.diff.x},
+		{segment.origin.y + t * segment.diff.y},
+		{segment.origin.z + t * segment.diff.z}
+	};
+
+	Vector3 v0p =
+	{
+		intersection.x - v0.x,
+		intersection.y - v0.y,
+		intersection.z - v0.z
+	};
+
+	Vector3 v1p =
+	{
+		intersection.x - v1.x,
+		intersection.y - v1.y,
+		intersection.z - v1.z
+	};
+
+	Vector3 v2p =
+	{
+		intersection.x - v2.x,
+		intersection.y - v2.y,
+		intersection.z - v2.z
+	};
+
+
+	Vector3 cross01 = Cross(v01, v1p);
+	Vector3 cross12 = Cross(v12, v2p);
+	Vector3 cross20 = Cross(v20, v0p);
+
+	if(Dot(cross01, normal) >= 0.0f &&
+		Dot(cross12, normal) >= 0.0f &&
+		Dot(cross20, normal) >= 0.0f)
+	{
+		return true;
+	}
+	return false;
+
+}
+
 
 
 //bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
@@ -493,6 +586,18 @@ void OwnMatrix4x4::DrawPlane(const Plane& plane, const Matrix4x4& viewProjection
 	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[2].x, (int)points[2].y, color2);//red
 	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[3].x, (int)points[3].y, color3);//blue
 	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color4);//green
+}
+
+void OwnMatrix4x4::DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color)
+{
+	Vector3 screenVertices[3];
+	for (uint32_t i = 0; i < 3; i++)
+	{
+		Vector3 ndcVertex = Transform(triangle.vertices[i], viewProjectionMatrix);
+		screenVertices[i] = Transform(ndcVertex, viewPortMatrix);
+	}
+
+	Novice::DrawTriangle((int)screenVertices[0].x, (int)screenVertices[0].y, (int)screenVertices[1].x, (int)screenVertices[1].y, (int)screenVertices[2].x, (int)screenVertices[2].y, color, kFillModeWireFrame);
 }
 
 Vector3 OwnMatrix4x4::Normalize(Vector3 v)
