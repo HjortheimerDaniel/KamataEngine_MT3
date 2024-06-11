@@ -539,6 +539,20 @@ bool OwnMatrix4x4::IsCollision(const Segment& segment, const Triangle& triangle)
 
 }
 
+bool OwnMatrix4x4::IsCollision(const AABB& aabb1, const AABB& aabb2)
+{
+	//aabb1.min.x = (std::min)(aabb1.min.x, aabb1.max.x);
+
+	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
+		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
+		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 
 
 //bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
@@ -598,6 +612,50 @@ void OwnMatrix4x4::DrawTriangle(const Triangle& triangle, const Matrix4x4& viewP
 	}
 
 	Novice::DrawTriangle((int)screenVertices[0].x, (int)screenVertices[0].y, (int)screenVertices[1].x, (int)screenVertices[1].y, (int)screenVertices[2].x, (int)screenVertices[2].y, color, kFillModeWireFrame);
+}
+
+void OwnMatrix4x4::DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color)
+{
+	Vector3 corners[8] = {
+		{aabb.min.x, aabb.min.y, aabb.min.z},
+		{aabb.max.x, aabb.min.y, aabb.min.z},
+		{aabb.min.x, aabb.max.y, aabb.min.z},
+		{aabb.max.x, aabb.max.y, aabb.min.z},
+		{aabb.min.x, aabb.min.y, aabb.max.z},
+		{aabb.max.x, aabb.min.y, aabb.max.z},
+		{aabb.min.x, aabb.max.y, aabb.max.z},
+		{aabb.max.x, aabb.max.y, aabb.max.z}
+	};
+
+	Vector3 screenCorners[8];
+	for (int i = 0; i < 8; i++)
+	{
+		Vector3 temp = Transform(corners[i], viewProjectionMatrix);
+		screenCorners[i] = Transform(temp, viewPortMatrix);
+	}
+
+	//int edges[12][2] = {
+    //    {0, 1}, {1, 3}, {3, 2}, {2, 0}, // Bottom face
+    //    {4, 5}, {5, 7}, {7, 6}, {6, 4}, // Top face
+    //    {0, 4}, {1, 5}, {2, 6}, {3, 7}  // Vertical edges
+    //};
+	//
+    //// Draw the edges
+    //for (int i = 0; i < 12; ++i) {
+    //    Vector3 start = screenCorners[edges[i][0]];
+    //    Vector3 end = screenCorners[edges[i][1]];
+    //    Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, color);
+    //}
+
+	Novice::DrawLine((int).x, (int)start.y, (int)end.x, (int)end.y, color);
+
+
+	//Vector3 aabbMin = Transform(aabb.min, viewProjectionMatrix);
+	//Vector3 aabbMax = Transform(aabb.max, viewProjectionMatrix);
+	//Vector3 screenMin = Transform(aabbMin, viewPortMatrix);
+	//Vector3 screenMax = Transform(aabbMax, viewPortMatrix);
+	//
+	//Novice::DrawLine((int)screenMin.x, (int)screenMin.y, (int)screenMax.x, (int)screenMax.y, color);
 }
 
 Vector3 OwnMatrix4x4::Normalize(Vector3 v)

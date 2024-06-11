@@ -45,3 +45,9 @@ struct Triangle {
 	Vector3 vertices[3];
 	int color;
 };
+
+struct AABB {
+	Vector3 min;
+	Vector3 max;
+	int color;
+};
