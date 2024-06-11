@@ -633,21 +633,26 @@ void OwnMatrix4x4::DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMat
 		Vector3 temp = Transform(corners[i], viewProjectionMatrix);
 		screenCorners[i] = Transform(temp, viewPortMatrix);
 	}
-
-	int edges[12][2] = {
-        {0, 1}, {1, 3}, {3, 2}, {2, 0}, // Bottom face
-        {4, 5}, {5, 7}, {7, 6}, {6, 4}, // Top face
-        {0, 4}, {1, 5}, {2, 6}, {3, 7}  // Vertical edges
-    };
 	
-    // Draw the edges
-    for (int i = 0; i < 12; ++i) {
-        Vector3 start = screenCorners[edges[i][0]];
-        Vector3 end = screenCorners[edges[i][1]];
-        Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, color);
-    }
+	// Draw the bottom face (min z)
+	Novice::DrawLine((int)screenCorners[0].x, (int)screenCorners[0].y, (int)screenCorners[1].x, (int)screenCorners[1].y, color);
+	Novice::DrawLine((int)screenCorners[1].x, (int)screenCorners[1].y, (int)screenCorners[3].x, (int)screenCorners[3].y, color);
+	Novice::DrawLine((int)screenCorners[3].x, (int)screenCorners[3].y, (int)screenCorners[2].x, (int)screenCorners[2].y, color);
+	Novice::DrawLine((int)screenCorners[2].x, (int)screenCorners[2].y, (int)screenCorners[0].x, (int)screenCorners[0].y, color);
 
-	//Novice::DrawLine((int).x, (int)start.y, (int)end.x, (int)end.y, color);
+	// Draw the top face (max z)
+	Novice::DrawLine((int)screenCorners[4].x, (int)screenCorners[4].y, (int)screenCorners[5].x, (int)screenCorners[5].y, color);
+	Novice::DrawLine((int)screenCorners[5].x, (int)screenCorners[5].y, (int)screenCorners[7].x, (int)screenCorners[7].y, color);
+	Novice::DrawLine((int)screenCorners[7].x, (int)screenCorners[7].y, (int)screenCorners[6].x, (int)screenCorners[6].y, color);
+	Novice::DrawLine((int)screenCorners[6].x, (int)screenCorners[6].y, (int)screenCorners[4].x, (int)screenCorners[4].y, color);
+
+	// Draw the vertical edges connecting top and bottom faces
+	Novice::DrawLine((int)screenCorners[0].x, (int)screenCorners[0].y, (int)screenCorners[4].x, (int)screenCorners[4].y, color);
+	Novice::DrawLine((int)screenCorners[1].x, (int)screenCorners[1].y, (int)screenCorners[5].x, (int)screenCorners[5].y, color);
+	Novice::DrawLine((int)screenCorners[2].x, (int)screenCorners[2].y, (int)screenCorners[6].x, (int)screenCorners[6].y, color);
+	Novice::DrawLine((int)screenCorners[3].x, (int)screenCorners[3].y, (int)screenCorners[7].x, (int)screenCorners[7].y, color);
+
+	//Novice::DrawLine((int)corners[.x, (int)start.y, (int)end.x, (int)end.y, color);
 
 
 	//Vector3 aabbMin = Transform(aabb.min, viewProjectionMatrix);
