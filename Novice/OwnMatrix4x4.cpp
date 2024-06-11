@@ -416,8 +416,8 @@ bool OwnMatrix4x4::IsCollision(const Sphere& s1, const Sphere& s2)
 bool OwnMatrix4x4::IsCollision(const Sphere& sphere, const Plane& plane)
 {
 	float distance = Dot(plane.normal, sphere.center) - plane.distance;
-	
-	if (distance <= sphere.radius && distance >= -sphere.radius)
+
+	if (fabsf(distance) - sphere.radius <= 0)
 	{
 		return true;
 	}
