@@ -116,6 +116,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat("Plane", &plane.distance, 0.01f);
 		ImGui::DragFloat3("Plane", &plane.normal.x, 0.01f);
 		ImGui::End();
+		//plane.normal = ownMatrix4x4->Normalize(plane.normal);
+
 		///
 		/// ↑描画処理ここまで
 		///
