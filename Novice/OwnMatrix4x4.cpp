@@ -440,7 +440,6 @@ bool OwnMatrix4x4::IsCollision(const Segment& segment, const Plane& plane)
 
 	if (t >= 0.0f && t <= 1.0f)
 	{
-
 		return true;
 	}
 	
