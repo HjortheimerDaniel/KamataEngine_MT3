@@ -73,6 +73,8 @@ public:
 
 	bool IsCollision(const AABB& aabb1, const AABB& aabb2);
 
+	bool IsCollision(const AABB& aabb, const Sphere& sphere);
+
 	float Length(const Vector3& point1, const Vector3& point2);
 
 	Vector3 Perpendicular(const Vector3& vector);

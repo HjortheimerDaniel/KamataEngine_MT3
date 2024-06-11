@@ -15,12 +15,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	OwnMatrix4x4* ownMatrix4x4 = new OwnMatrix4x4();
 	
-	//Sphere sphere
-	//{
-	//	0,0,0, //center
-	//	1, // radius
-	//	(int)WHITE, 
-	//};
+	Sphere sphere
+	{
+		0,0,0, //center
+		1, // radius
+		(int)WHITE, 
+	};
 
 	/*Sphere sphere2
 	{
@@ -55,18 +55,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//	(int)WHITE
 	//};
 
-	//Vector3 point{ -1.5f, 0.6f, 0.6f };
+	Vector3 point{ -1.5f, 0.6f, 0.6f };
 	
 	AABB aabb1{
-		.min{-0.5f, -0.5f, -0.5f},
-		.max{0.0f, 0.0f, 0.0f}
+		.min{-2.5f, -0.5f, -0.5f},
+		.max{-1.5f, 0.5f, 0.4f}
 	};
 
-	AABB aabb2{
-		.min{0.2f, 0.2f, 0.2f},
-		.max{1.0f, 1.0f, 1.0f},
-		.color{(int)WHITE}
-	};
+	//AABB aabb2{
+	//	.min{0.2f, 0.2f, 0.2f},
+	//	.max{1.0f, 1.0f, 1.0f},
+	//	.color{(int)WHITE}
+	//};
 	
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -93,10 +93,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//Vector3 project = ownMatrix4x4->Project(ownMatrix4x4->Subtract(point, segment.origin), segment.diff);
 		//Vector3 closestPoint = ownMatrix4x4->ClosestPoint(point, segment);
-		//Sphere pointSphere{ point, 0.01f };
+		Sphere pointSphere{ point, 0.01f };
 		//Sphere closestPointSphere{ closestPoint, 0.01f };
 		
-		if(ownMatrix4x4->IsCollision(aabb1, aabb2))
+		if(ownMatrix4x4->IsCollision(aabb1, sphere))
 		{
 			aabb1.color = RED;
 		}
@@ -115,7 +115,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		
 		//ownMatrix4x4->DrawGrid(viewMatrixProjectionMatrix, viewportMatrix);
 
-		//ownMatrix4x4->DrawSphere(pointSphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
+		ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
 		//ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, WHITE);
 		//ownMatrix4x4->DrawSphere(sphere, viewMatrixProjectionMatrix, viewportMatrix, sphere.color);
 		//ownMatrix4x4->DrawSphere(sphere2, viewMatrixProjectionMatrix, viewportMatrix, sphere2.color);
@@ -131,17 +131,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, segment.color);
 
 		ownMatrix4x4->DrawAABB(aabb1, viewMatrixProjectionMatrix, viewportMatrix, aabb1.color);
-		ownMatrix4x4->DrawAABB(aabb2, viewMatrixProjectionMatrix, viewportMatrix, aabb2.color);
 
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		//ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
-		//ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
+		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
+		ImGui::DragFloat("SphereRadius", &sphere.radius, 0.01f);
 		ImGui::DragFloat3("aabb1 min", &aabb1.min.x, 0.01f);
 		ImGui::DragFloat3("aabb1 max", &aabb1.max.x, 0.01f);
-		ImGui::DragFloat3("aabb2 min", &aabb2.min.x, 0.01f);
-		ImGui::DragFloat3("aabb2 max", &aabb2.max.x, 0.01f);
+		//ImGui::DragFloat3("aabb2 min", &aabb2.min.x, 0.01f);
+		//ImGui::DragFloat3("aabb2 max", &aabb2.max.x, 0.01f);
 		//ImGui::DragFloat3("Triangle 2", &triangle.vertices[2].x, 0.01f);
 		//ImGui::DragFloat3("Line", &segment.origin.x, 0.01f);
 		//ImGui::DragFloat3("Line diff", &segment.diff.x, 0.01f);
