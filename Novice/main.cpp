@@ -14,11 +14,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = {0};
 
 	OwnMatrix4x4* ownMatrix4x4 = new OwnMatrix4x4();
-	Sphere sphere
-	{
-		0,0,0, //center
-		1 // radius
-	};
+	//Sphere sphere
+	//{
+	//	0,0,0, //center
+	//	1 // radius
+	//};
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
 	Vector3 cameraTranslate{ 0.0f,1.9f, -6.49f };
 	Vector3 cameraPosition = { 0,0,-10.0f };
@@ -75,6 +75,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ownMatrix4x4->DrawSphere(closestPointSphere, viewMatrixProjectionMatrix, viewportMatrix, BLACK);
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("cameraTranslate", &cameraTranslate.x, 0.01f);
+		ImGui::DragFloat3("start", &start.x, 0.01f);
+		ImGui::DragFloat3("end", &end.x, 0.01f);
 		ImGui::DragFloat3("Point", &point.x, 0.3f);
 		ImGui::DragFloat3("Segment origin", &segment.origin.x, 0.3f);
 		ImGui::DragFloat3("Segment diff", &segment.diff.x, 0.3f);
