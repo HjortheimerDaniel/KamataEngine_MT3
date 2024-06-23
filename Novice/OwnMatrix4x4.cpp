@@ -585,7 +585,6 @@ bool OwnMatrix4x4::IsCollision(const AABB& aabb, const Segment& segment)
 	}
 	else 
 	{
-		
 		txMin = -INFINITY;
 		txMax = INFINITY;
 	}
@@ -611,12 +610,6 @@ bool OwnMatrix4x4::IsCollision(const AABB& aabb, const Segment& segment)
 		tzMin = -INFINITY;
 		tzMax = INFINITY;
 	}
-	
-	//float tyMin = (aabb.min.y - segment.origin.y) / segment.diff.y;
-	//float tyMax = (aabb.max.y - segment.origin.y) / segment.diff.y;
-	//
-	//float tzMin = (aabb.min.z - segment.origin.z) / segment.diff.z;
-	//float tzMax = (aabb.max.z - segment.origin.z) / segment.diff.z;
 
 	float tNearX = min(txMin, txMax);
 	float tNearY = min(tyMin, tyMax);
