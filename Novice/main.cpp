@@ -139,7 +139,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//ownMatrix4x4->DrawAABB(aabb1, viewMatrixProjectionMatrix, viewportMatrix, aabb1.color);
 
-		ownMatrix4x4->DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], viewMatrixProjectionMatrix, viewportMatrix, RED);
+		ownMatrix4x4->DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], viewMatrixProjectionMatrix, viewportMatrix, BLUE);
 
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);

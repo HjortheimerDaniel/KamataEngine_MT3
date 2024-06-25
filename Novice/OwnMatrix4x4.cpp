@@ -791,10 +791,27 @@ void OwnMatrix4x4::DrawBezier(const Vector3& controlPoint0, const Vector3& contr
 	Sphere sphere1
 	{
 		controlPoint0,
-		0.1f,
-		
+		0.01f,
+		(int)BLACK
+
 	};
 
+	Sphere sphere2
+	{
+		controlPoint1,
+		0.01f,
+		(int)BLACK
+
+	};
+
+	Sphere sphere3
+	{
+		controlPoint2,
+		0.01f,
+		(int)BLACK
+
+	};
+	
 
 	for (int i = 0; i < points; i++)
 	{
@@ -811,9 +828,12 @@ void OwnMatrix4x4::DrawBezier(const Vector3& controlPoint0, const Vector3& contr
 
 
 
-		DrawSphere(sphere1, viewProjectionMatrix, viewPortMatrix, sphere1.color);
 
 	}
+	
+	DrawSphere(sphere1, viewProjectionMatrix, viewPortMatrix, sphere1.color);
+	DrawSphere(sphere2, viewProjectionMatrix, viewPortMatrix, sphere2.color);
+	DrawSphere(sphere3, viewProjectionMatrix, viewPortMatrix, sphere3.color);
 
 }
 
