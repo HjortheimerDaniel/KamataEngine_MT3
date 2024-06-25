@@ -87,6 +87,8 @@ public:
 
 	void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color);
 
+	void DrawOBB(const OBB& obb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color)
+
 	Vector3 Normalize(Vector3 v);
 
 	float Dot(Vector3 v1, Vector3 v2);

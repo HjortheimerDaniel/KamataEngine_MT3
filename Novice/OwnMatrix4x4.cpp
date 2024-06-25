@@ -742,6 +742,12 @@ void OwnMatrix4x4::DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMat
 	//Novice::DrawLine((int)screenMin.x, (int)screenMin.y, (int)screenMax.x, (int)screenMax.y, color);
 }
 
+void OwnMatrix4x4::DrawOBB(const OBB& obb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color)
+{
+	
+	Matrix4x4 rotateMatrix = Multiply(MakeRotateXMatrix())
+}
+
 Vector3 OwnMatrix4x4::Normalize(Vector3 v)
 {
 	float normalize(v.x * v.x + v.y * v.y + v.z * v.z);
