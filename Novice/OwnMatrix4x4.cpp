@@ -837,5 +837,112 @@ void OwnMatrix4x4::DrawBezier(const Vector3& controlPoint0, const Vector3& contr
 
 }
 
+Vector3 OwnMatrix4x4::CatmullRom(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t)
+{
+	float t2 = t * t;
+	float t3 = t2 * t;
+
+	Vector3 result = {
+		0.5f * ((-p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * t3 +
+				(2.0f * p0.x - 5.0f * p1.x + 4.0f * p2.x - p3.x) * t2 +
+				(-p0.x + p2.x) * t +
+				2.0f * p1.x),
+		0.5f * ((-p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * t3 +
+				(2.0f * p0.y - 5.0f * p1.y + 4.0f * p2.y - p3.y) * t2 +
+				(-p0.y + p2.y) * t +
+				2.0f * p1.y),
+		0.5f * ((-p0.z + 3.0f * p1.z - 3.0f * p2.z + p3.z) * t3 +
+				(2.0f * p0.z - 5.0f * p1.z + 4.0f * p2.z - p3.z) * t2 +
+				(-p0.z + p2.z) * t +
+				2.0f * p1.z)
+	};
+
+	return result;
+}
+
+void OwnMatrix4x4::DrawCatmullRom(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2, const Vector3& controlPoint3, Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color)
+{
+	int points = 32;
+	Vector3 spline0{}, spline1{};
+
+	Sphere sphere1
+	{
+		controlPoint0,
+		0.01f,
+		(int)BLACK
+	};
+
+	Sphere sphere2
+	{
+		controlPoint1,
+		0.01f,
+		(int)BLACK
+	};
+
+	Sphere sphere3
+	{
+		controlPoint2,
+		0.01f,
+		(int)BLACK
+	};
+
+	Sphere sphere4
+	{
+		controlPoint3,
+		0.01f,
+		(int)BLACK
+	};
+
+	for (int i = 0; i < points; i++)
+	{
+	float t0, t1;
+		t0 = i / float(points); // Adjusted to cover the range [0, 1]
+		t1 = (i + 1) / float(points); // Adjusted to cover the range [0, 1]
+
+		spline0 = CatmullRom(controlPoint0, controlPoint0, controlPoint1, controlPoint2, t0);
+		spline1 = CatmullRom(controlPoint0, controlPoint0, controlPoint1, controlPoint2, t1);
+
+		Vector3 screenStart = Transform(Transform(spline0, viewProjectionMatrix), viewPortMatrix);
+		Vector3 screenEnd = Transform(Transform(spline1, viewProjectionMatrix), viewPortMatrix);
+
+		Novice::DrawLine((int)screenStart.x, (int)screenStart.y, (int)screenEnd.x, (int)screenEnd.y, color);
+	}
+	
+	for (int i = 0; i < points; i++)
+	{
+	float t0, t1;
+		t0 = i / float(points); // Adjusted to cover the range [0, 1]
+		t1 = (i + 1) / float(points); // Adjusted to cover the range [0, 1]
+
+		spline0 = CatmullRom(controlPoint0, controlPoint1, controlPoint2, controlPoint3, t0);
+		spline1 = CatmullRom(controlPoint0, controlPoint1, controlPoint2, controlPoint3, t1);
+
+		Vector3 screenStart = Transform(Transform(spline0, viewProjectionMatrix), viewPortMatrix);
+		Vector3 screenEnd = Transform(Transform(spline1, viewProjectionMatrix), viewPortMatrix);
+
+		Novice::DrawLine((int)screenStart.x, (int)screenStart.y, (int)screenEnd.x, (int)screenEnd.y, color);
+	}
+	
+	for (int i = 0; i < points; i++)
+	{
+	float t0, t1;
+		t0 = i / float(points); // Adjusted to cover the range [0, 1]
+		t1 = (i + 1) / float(points); // Adjusted to cover the range [0, 1]
+
+		spline0 = CatmullRom(controlPoint1, controlPoint2, controlPoint3, controlPoint3, t0);
+		spline1 = CatmullRom(controlPoint1, controlPoint2, controlPoint3, controlPoint3, t1);
+
+		Vector3 screenStart = Transform(Transform(spline0, viewProjectionMatrix), viewPortMatrix);
+		Vector3 screenEnd = Transform(Transform(spline1, viewProjectionMatrix), viewPortMatrix);
+
+		Novice::DrawLine((int)screenStart.x, (int)screenStart.y, (int)screenEnd.x, (int)screenEnd.y, color);
+	}
+
+	DrawSphere(sphere1, viewProjectionMatrix, viewPortMatrix, sphere1.color);
+	DrawSphere(sphere2, viewProjectionMatrix, viewPortMatrix, sphere2.color);
+	DrawSphere(sphere3, viewProjectionMatrix, viewPortMatrix, sphere3.color);
+	DrawSphere(sphere4, viewProjectionMatrix, viewPortMatrix, sphere4.color);
+}
+
 
 
