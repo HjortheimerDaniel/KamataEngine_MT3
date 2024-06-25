@@ -759,5 +759,63 @@ float OwnMatrix4x4::Dot(Vector3 v1, Vector3 v2)
 	return result;
 }
 
+Vector3 OwnMatrix4x4::Lerp(const Vector3& v1, const Vector3& v2, float t)
+{
+	Vector3 p{};
+
+	p.x = t * v1.x + (1.0f - t) * v2.x;
+	p.y = t * v1.y + (1.0f - t) * v2.y;
+	p.z = t * v1.z + (1.0f - t) * v2.z;
+
+	return p;
+}
+
+Vector3 OwnMatrix4x4::Bezier(const Vector3& p0, const Vector3& p1, const Vector3& p2, float t)
+{
+	Vector3 p0p1 = Lerp(p0, p1, t);
+	Vector3 p1p2 = Lerp(p1, p2, t);
+	Vector3 p = Lerp(p0p1, p1p2, t);
+
+	return p;
+}
+
+void OwnMatrix4x4::DrawBezier(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2, Matrix4x4& viewProjectionMatrix, const Matrix4x4 viewPortMatrix, uint32_t color)
+{
+	int points = 32;
+	float t0;
+	float t1;
+	Vector3 bezier0{};
+	Vector3 bezier1{};
+
+
+	Sphere sphere1
+	{
+		controlPoint0,
+		0.1f,
+		
+	};
+
+
+	for (int i = 0; i < points; i++)
+	{
+		t0 = i / float(points);
+		t1 = (i + 1) / float(points);
+
+		bezier0 = Bezier(controlPoint0, controlPoint1, controlPoint2, t0);
+		bezier1 = Bezier(controlPoint0, controlPoint1, controlPoint2, t1);
+		
+		Vector3 screenStart = Transform(Transform(bezier0, viewProjectionMatrix), viewPortMatrix);
+		Vector3 screenEnd = Transform(Transform(bezier1, viewProjectionMatrix), viewPortMatrix);
+
+		Novice::DrawLine((int)screenStart.x, (int)screenStart.y, (int)screenEnd.x, (int)screenEnd.y, color);
+
+
+
+		DrawSphere(sphere1, viewProjectionMatrix, viewPortMatrix, sphere1.color);
+
+	}
+
+}
+
 
 

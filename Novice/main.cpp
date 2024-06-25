@@ -35,17 +35,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		1.0f
 	};*/
 
+	Vector3 controlPoints[3]
+	{
+		{-0.8f, 0.58f, 1.0f},
+		{1.76f, 1.0f, -0.3f},
+		{0.94f, -0.7f, 2.3f}
+	};
+
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
 	Vector3 cameraTranslate{ 0.0f,1.9f, -6.49f };
 	Vector3 cameraPosition = { 0,0,-10.0f };
 
-	Segment segment
-	{
-		{-0.7f, 0.3f, 0.0f}, //origin
-		{2.0f, -0.5f, 0.0f}, //diff
-		(int)WHITE
-	
-	};
+	//Segment segment
+	//{
+	//	{-0.7f, 0.3f, 0.0f}, //origin
+	//	{2.0f, -0.5f, 0.0f}, //diff
+	//	(int)WHITE
+	//
+	//};
 	//
 	//Triangle triangle
 	//{
@@ -57,10 +64,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//Vector3 point{ -1.5f, 0.6f, 0.6f };
 	
-	AABB aabb1{
+	/*AABB aabb1{
 		.min{-0.5f, -0.5f, -0.5f},
 		.max{0.5f, 0.5f, 0.5f}
-	};
+	};*/
 
 	//AABB aabb2{
 	//	.min{0.2f, 0.2f, 0.2f},
@@ -87,8 +94,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 viewMatrixProjectionMatrix = ownMatrix4x4->Multiply(viewMatrix, projectionMatrix);
 		Matrix4x4 worldViewProjectionMatrix = ownMatrix4x4->Multiply(worldMatrix, viewMatrixProjectionMatrix);
 		Matrix4x4 viewportMatrix = ownMatrix4x4->MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
-		Vector3 start = ownMatrix4x4->Transform(ownMatrix4x4->Transform(segment.origin, viewMatrixProjectionMatrix), viewportMatrix);
-		Vector3 end =ownMatrix4x4->Transform(ownMatrix4x4->Transform(ownMatrix4x4->Add(segment.origin, segment.diff), viewMatrixProjectionMatrix), viewportMatrix);
+		//Vector3 start = ownMatrix4x4->Transform(ownMatrix4x4->Transform(segment.origin, viewMatrixProjectionMatrix), viewportMatrix);
+		//Vector3 end =ownMatrix4x4->Transform(ownMatrix4x4->Transform(ownMatrix4x4->Add(segment.origin, segment.diff), viewMatrixProjectionMatrix), viewportMatrix);
 
 
 		//Vector3 project = ownMatrix4x4->Project(ownMatrix4x4->Subtract(point, segment.origin), segment.diff);
@@ -96,14 +103,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Sphere pointSphere{ point, 0.01f };
 		//Sphere closestPointSphere{ closestPoint, 0.01f };
 		
-		if(ownMatrix4x4->IsCollision(aabb1, segment))
+		/*if(ownMatrix4x4->IsCollision(aabb1, segment))
 		{
 			aabb1.color = RED;
 		}
 		else 
 		{
 			aabb1.color = WHITE;
-		}
+		}*/
 
 		///
 		/// ↑更新処理ここまで
@@ -128,17 +135,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		}*/
 		//ownMatrix4x4->DrawTriangle(triangle, viewMatrixProjectionMatrix, viewportMatrix, triangle.color);
-		Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, segment.color);
+		//Novice::DrawLine((int)start.x, (int)start.y, (int)end.x, (int)end.y, segment.color);
 
-		ownMatrix4x4->DrawAABB(aabb1, viewMatrixProjectionMatrix, viewportMatrix, aabb1.color);
+		//ownMatrix4x4->DrawAABB(aabb1, viewMatrixProjectionMatrix, viewportMatrix, aabb1.color);
+
+		ownMatrix4x4->DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], viewMatrixProjectionMatrix, viewportMatrix, RED);
 
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("Line origin", &segment.origin.x, 0.01f);
-		ImGui::DragFloat3("Line difference", &segment.diff.x, 0.01f);
-		ImGui::DragFloat3("aabb1 min", &aabb1.min.x, 0.01f);
-		ImGui::DragFloat3("aabb1 max", &aabb1.max.x, 0.01f);
+		ImGui::DragFloat3("point0", &controlPoints[0].x, 0.01f);
+		ImGui::DragFloat3("point1", &controlPoints[1].x, 0.01f);
+		ImGui::DragFloat3("point2", &controlPoints[2].x, 0.01f);
+		//ImGui::DragFloat3("Line difference", &segment.diff.x, 0.01f);
+		//ImGui::DragFloat3("aabb1 min", &aabb1.min.x, 0.01f);
+		//ImGui::DragFloat3("aabb1 max", &aabb1.max.x, 0.01f);
 		//ImGui::DragFloat3("aabb2 min", &aabb2.min.x, 0.01f);
 		//ImGui::DragFloat3("aabb2 max", &aabb2.max.x, 0.01f);
 		//ImGui::DragFloat3("Triangle 2", &triangle.vertices[2].x, 0.01f);
