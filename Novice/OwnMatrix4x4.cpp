@@ -944,5 +944,47 @@ void OwnMatrix4x4::DrawCatmullRom(const Vector3& controlPoint0, const Vector3& c
 	DrawSphere(sphere4, viewProjectionMatrix, viewPortMatrix, sphere4.color);
 }
 
+void OwnMatrix4x4::MakeSpring(Spring& spring, Ball& ball)
+{
+	float deltaTime = 1.0f / 60.0f;
+	Vector3 diff = ball.position - spring.anchor;
+	float length = Length(ball.position, spring.anchor);
+	if (length != 0.0f)
+	{
+		Vector3 direction = Normalize(diff);
+		Vector3 restPosition;
+		restPosition.x = spring.anchor.x + direction.x * spring.naturalLength;
+		restPosition.y = spring.anchor.y + direction.y * spring.naturalLength;
+		restPosition.z = spring.anchor.z + direction.z * spring.naturalLength;
+
+		Vector3 displacement;
+		displacement.x = length * (ball.position.x - restPosition.x);
+		displacement.y = length * (ball.position.y - restPosition.y);
+		displacement.z = length * (ball.position.z - restPosition.z);
+
+		Vector3 restoringForce;
+		restoringForce.x = -spring.stiffness * displacement.x;
+		restoringForce.y = -spring.stiffness * displacement.y;
+		restoringForce.z = -spring.stiffness * displacement.z;
+
+		Vector3 dampingForce;
+		dampingForce.x = -spring.dampingCoefficient * ball.velocity.x;
+		dampingForce.y = -spring.dampingCoefficient * ball.velocity.y;
+		dampingForce.z = -spring.dampingCoefficient * ball.velocity.z;
+
+
+		Vector3 force = restoringForce + dampingForce;
+
+		ball.acceleration = force / ball.mass;
+	
+	}
+
+	ball.velocity += ball.acceleration * deltaTime;
+	ball.position += ball.velocity * deltaTime;
+
+
+	
+}
+
 
 

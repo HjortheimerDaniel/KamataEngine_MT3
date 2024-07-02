@@ -14,18 +14,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char preKeys[256] = {0};
 
 	OwnMatrix4x4* ownMatrix4x4 = new OwnMatrix4x4();
-	
-	Vector3 a = { 0.2f, 1.0f, 0.0f };
-	Vector3 b = { 2.4f, 3.1f, 1.2f };
-	Vector3 c = a + b;
-	Vector3 d = a - b;
-	Vector3 e = a * 2.4f;
-	Vector3 rotate = { 0.4f, 1.43f, -0.8f };
-	Matrix4x4 rotateXMatrix = ownMatrix4x4->MakeRotateXMatrix(rotate.x);
-	Matrix4x4 rotateYMatrix = ownMatrix4x4->MakeRotateYMatrix(rotate.y);
-	Matrix4x4 rotateZMatrix = ownMatrix4x4->MakeRotateZMatrix(rotate.z);
-	Matrix4x4 rotateMatrix = rotateXMatrix * rotateYMatrix * rotateZMatrix;
-
 
 	//Sphere sphere
 	//{
@@ -95,6 +83,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//	.color{(int)WHITE}
 	//};
 
+	Spring spring{};
+	spring.anchor = { 0.0f, 0.0f, 0.0f };
+	spring.naturalLength = 1.0f;
+	spring.stiffness = 100.0f;
+	spring.dampingCoefficient = 2.0f;
+
+	Ball ball{};
+
+	ball.position = { 1.2f, 0.0f, 0.f };
+	ball.mass = 2.0f;
+	ball.radius = 0.05f;
+	ball.color = BLUE;
+
+	bool start = false;
+
 	Vector3 translates[3] = //0 = shoulder, 1 = elbow, 2 = hand
 	{
 		{0.2f, 1.0f, 0.0f},
@@ -140,8 +143,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 viewportMatrix = ownMatrix4x4->MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 		//Vector3 start = ownMatrix4x4->Transform(ownMatrix4x4->Transform(segment.origin, viewMatrixProjectionMatrix), viewportMatrix);
 		//Vector3 end =ownMatrix4x4->Transform(ownMatrix4x4->Transform(ownMatrix4x4->Add(segment.origin, segment.diff), viewMatrixProjectionMatrix), viewportMatrix);
-
-
+		if (start) 
+		{
+			ownMatrix4x4->MakeSpring(spring, ball);
+		}
 		//Vector3 project = ownMatrix4x4->Project(ownMatrix4x4->Subtract(point, segment.origin), segment.diff);
 		//Vector3 closestPoint = ownMatrix4x4->ClosestPoint(point, segment);
 		//Sphere pointSphere{ point, 0.01f };
@@ -197,31 +202,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Novice::DrawLine((int)shoulderPos.x, (int)shoulderPos.y, (int)elbowPos.x, (int)elbowPos.y, WHITE);
 		Novice::DrawLine((int)elbowPos.x, (int)elbowPos.y, (int)handPos.x, (int)handPos.y, WHITE);*/
 		//Novice::DrawLine(1, 1, 300, 300, WHITE);
-
+		Vector3 screenBall = ownMatrix4x4->Transform(ownMatrix4x4->Transform(ball.position, viewMatrixProjectionMatrix), viewportMatrix);
+		Vector3 screenSpring = ownMatrix4x4->Transform(ownMatrix4x4->Transform(spring.anchor, viewMatrixProjectionMatrix), viewportMatrix);
+		ownMatrix4x4->Transform(spring.anchor, worldViewProjectionMatrix);
+		ownMatrix4x4->DrawSphere({ ball.position, ball.radius }, viewMatrixProjectionMatrix, viewportMatrix, ball.color);
+		Novice::DrawLine((int)screenBall.x, (int)screenBall.y, (int)screenSpring.x, (int)screenSpring.y, WHITE);
 
 		
 		ImGui::Begin("Window");
-		ImGui::Text("c: %f, %f, %f,", c.x, c.y, c.z);
-		ImGui::Text("d: %f, %f, %f,", d.x, d.y, d.z);
-		ImGui::Text("e: %f, %f, %f,", e.x, e.y, e.z);
-		ImGui::Text("matrix:\n %f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n",
-			rotateMatrix.m[0][0], rotateMatrix.m[0][1], rotateMatrix.m[0][2], rotateMatrix.m[0][3],
-			rotateMatrix.m[1][0], rotateMatrix.m[1][1], rotateMatrix.m[1][2], rotateMatrix.m[1][3],
-			rotateMatrix.m[2][0], rotateMatrix.m[2][1], rotateMatrix.m[2][2], rotateMatrix.m[2][3],
-			rotateMatrix.m[3][0], rotateMatrix.m[3][1], rotateMatrix.m[3][2], rotateMatrix.m[3][3]);
-		/*ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
-		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("Shoulder Translate", &translates[0].x, 0.01f);
-		ImGui::DragFloat3("Shoulder Rotate", &rotates[0].x, 0.01f);
-		ImGui::DragFloat3("Shoulder Scale", &scales[0].x, 0.01f);
-		ImGui::DragFloat3("Elbow Translate", &translates[1].x, 0.01f);
-		ImGui::DragFloat3("Elbow Rotate", &rotates[1].x, 0.01f);
-		ImGui::DragFloat3("Elbow Scale", &scales[1].x, 0.01f);
-		ImGui::DragFloat3("Hand Translate", &translates[2].x, 0.01f);
-		ImGui::DragFloat3("Hand Rotate", &rotates[2].x, 0.01f);
-		ImGui::DragFloat3("Hand Scale", &scales[2].x, 0.01f);
-		ImGui::DragFloat3("shoulder pos", &shoulderPos.x, 0.01f);
-		ImGui::DragFloat3("elbow pos", &elbowPos.x, 0.01f);*/
+		//ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
+		if (ImGui::Button("Start"))
+		{
+			start = true;
+		}
 		ImGui::End();
 		///
 		/// ↑描画処理ここまで
