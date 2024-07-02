@@ -21,7 +21,7 @@ public:
 
 	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 
-	Matrix4x4 Multiply(Matrix4x4& m1, Matrix4x4& m2);
+	Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 
 	Vector3 Multiply(Vector3& v1, Vector3& v2);
 

@@ -120,7 +120,7 @@ Vector3 OwnMatrix4x4::Subtract(const Vector3& v1, const Vector3& v2)
 	return result;
 }
 
-Matrix4x4 OwnMatrix4x4::Multiply(Matrix4x4& m1, Matrix4x4& m2) {
+Matrix4x4 OwnMatrix4x4::Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result{
 	    m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0],
 	    /*here*/ m1.m[0][0] * m2.m[0][1] + m1.m[0][1] * m2.m[1][1] + m1.m[0][2] * m2.m[2][1] + m1.m[0][3] * m2.m[3][1],
