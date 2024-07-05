@@ -118,9 +118,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		Matrix4x4 worldMatrix = ownMatrix4x4->MakeAffineMatrix({ 1.0f, 1.0f,1.0f }, {0,0,0}, {0,0,0});
 		Matrix4x4 cameraMatrix = ownMatrix4x4->MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate, cameraTranslate);
+
 		Matrix4x4 shoulderMatrix = ownMatrix4x4->MakeAffineMatrix(scales[0], rotates[0], translates[0]);
-		Matrix4x4 elbowMatrix = ownMatrix4x4->Multiply(shoulderMatrix, ownMatrix4x4->MakeAffineMatrix(scales[1], rotates[1], translates[1]));
-		Matrix4x4 handMatrix = ownMatrix4x4->Multiply(elbowMatrix, ownMatrix4x4->MakeAffineMatrix(scales[2], rotates[2], translates[2]));
+		Matrix4x4 elbowMatrix = ownMatrix4x4->MakeAffineMatrix(scales[1], rotates[1], translates[1]);
+		Matrix4x4 handMatrix = ownMatrix4x4->MakeAffineMatrix(scales[2], rotates[2], translates[2]);
+
+		Matrix4x4 shoulderWorldMatrix = shoulderMatrix;
+		Matrix4x4 elbowWorldMatrix = ownMatrix4x4->Multiply(elbowMatrix, shoulderWorldMatrix);
+		Matrix4x4 handWorldMatrix = ownMatrix4x4->Multiply(handMatrix, elbowWorldMatrix);
+
 		Matrix4x4 viewMatrix = ownMatrix4x4->Inverse(cameraMatrix);
 		Matrix4x4 projectionMatrix = ownMatrix4x4->MakePerspectiveFovMatrix(0.45f, float(kWindowWidth) / float(kWindowHeight), 0.1f, 100.f);
 		Matrix4x4 viewMatrixProjectionMatrix = ownMatrix4x4->Multiply(viewMatrix, projectionMatrix);
@@ -129,15 +135,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Vector3 start = ownMatrix4x4->Transform(ownMatrix4x4->Transform(segment.origin, viewMatrixProjectionMatrix), viewportMatrix);
 		//Vector3 end =ownMatrix4x4->Transform(ownMatrix4x4->Transform(ownMatrix4x4->Add(segment.origin, segment.diff), viewMatrixProjectionMatrix), viewportMatrix);
 
-
+		Vector3 shoulderPosition = { shoulderWorldMatrix.m[3][0], shoulderWorldMatrix.m[3][1], shoulderWorldMatrix.m[3][2] };
+		Vector3 elbowPosition = { elbowWorldMatrix.m[3][0], elbowWorldMatrix.m[3][1], elbowWorldMatrix.m[3][2] };
+		Vector3 handPosition = { handWorldMatrix.m[3][0], handWorldMatrix.m[3][1], handWorldMatrix.m[3][2] };
+		Vector3 shoulderLinePosition = ownMatrix4x4->Transform(ownMatrix4x4->Transform(shoulderPosition, viewMatrixProjectionMatrix), viewportMatrix);
+		Vector3 elbowLinePosition = ownMatrix4x4->Transform(ownMatrix4x4->Transform(elbowPosition, viewMatrixProjectionMatrix), viewportMatrix);
+		Vector3 handLinePosition = ownMatrix4x4->Transform(ownMatrix4x4->Transform(handPosition, viewMatrixProjectionMatrix), viewportMatrix);
 		//Vector3 project = ownMatrix4x4->Project(ownMatrix4x4->Subtract(point, segment.origin), segment.diff);
 		//Vector3 closestPoint = ownMatrix4x4->ClosestPoint(point, segment);
 		//Sphere pointSphere{ point, 0.01f };
 		//Sphere closestPointSphere{ closestPoint, 0.01f };
 		
-		Vector3 shoulderPos = ownMatrix4x4->Transform({ 0, 0, 0 }, shoulderMatrix);
-		Vector3 elbowPos = ownMatrix4x4->Transform({ 0, 0, 0 },elbowMatrix);
-		Vector3 handPos = ownMatrix4x4->Transform({ 0, 0, 0 }, handMatrix);
+		//Vector3 shoulderPos = ownMatrix4x4->Transform({ 0, 0, 0 }, shoulderMatrix);
+		//Vector3 elbowPos = ownMatrix4x4->Transform({ 0, 0, 0 },elbowMatrix);
+		//Vector3 handPos = ownMatrix4x4->Transform({ 0, 0, 0 }, handMatrix);
 
 
 		/*if(ownMatrix4x4->IsCollision(aabb1, segment))
@@ -178,13 +189,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//ownMatrix4x4->DrawBezier(controlPoints[0], controlPoints[1], controlPoints[2], viewMatrixProjectionMatrix, viewportMatrix, BLUE);
 		//ownMatrix4x4->DrawCatmullRom(controlPoints[0], controlPoints[1], controlPoints[2], controlPoints[3], viewMatrixProjectionMatrix, viewportMatrix, BLUE);
-		ownMatrix4x4->DrawSphere({ shoulderPos, 0.1f }, viewMatrixProjectionMatrix, viewportMatrix, RED);
-		ownMatrix4x4->DrawSphere({ elbowPos, 0.1f }, viewMatrixProjectionMatrix, viewportMatrix, BLUE);
-		ownMatrix4x4->DrawSphere({ handPos, 0.1f }, viewMatrixProjectionMatrix, viewportMatrix, GREEN);
+		ownMatrix4x4->DrawSphere({ shoulderPosition, 0.1f }, viewMatrixProjectionMatrix, viewportMatrix, RED);
+		ownMatrix4x4->DrawSphere({ elbowPosition, 0.1f }, viewMatrixProjectionMatrix, viewportMatrix, BLUE);
+		ownMatrix4x4->DrawSphere({ handPosition, 0.1f }, viewMatrixProjectionMatrix, viewportMatrix, GREEN);
 
-		Novice::DrawLine((int)shoulderPos.x, (int)shoulderPos.y, (int)elbowPos.x, (int)elbowPos.y, WHITE);
-		Novice::DrawLine((int)elbowPos.x, (int)elbowPos.y, (int)handPos.x, (int)handPos.y, WHITE);
-		//Novice::DrawLine(1, 1, 300, 300, WHITE);
+		Novice::DrawLine((int)shoulderLinePosition.x, (int)shoulderLinePosition.y, (int)elbowLinePosition.x, (int)elbowLinePosition.y, WHITE);
+		Novice::DrawLine((int)elbowLinePosition.x, (int)elbowLinePosition.y, (int)handLinePosition.x, (int)handLinePosition.y, WHITE);
 
 
 		
@@ -200,8 +210,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::DragFloat3("Hand Translate", &translates[2].x, 0.01f);
 		ImGui::DragFloat3("Hand Rotate", &rotates[2].x, 0.01f);
 		ImGui::DragFloat3("Hand Scale", &scales[2].x, 0.01f);
-		ImGui::DragFloat3("shoulder pos", &shoulderPos.x, 0.01f);
-		ImGui::DragFloat3("elbow pos", &elbowPos.x, 0.01f);
+		//ImGui::DragFloat3("shoulder pos", &shoulderPos.x, 0.01f);
+		//ImGui::DragFloat3("elbow pos", &elbowPos.x, 0.01f);
 		ImGui::End();
 		///
 		/// ↑描画処理ここまで
