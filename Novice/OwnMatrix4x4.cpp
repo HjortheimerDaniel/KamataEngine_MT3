@@ -34,14 +34,14 @@ Vector3 OwnMatrix4x4::Multiply(const float a, const Vector3& vector)
 	return result;
 }
 
-float OwnMatrix4x4::length(Vector3 distance)
+float OwnMatrix4x4::Length(Vector3 distance)
 {
 	return sqrtf(powf(distance.x, 2.0f) + powf(distance.y, 2.0f) + powf(distance.z, 2.0f));
 }
 
-Vector3 OwnMatrix4x4::normalize(Vector3 distance)
+Vector3 OwnMatrix4x4::Normalize(Vector3 distance)
 {
-	return { distance.x / length(distance),distance.y / length(distance),distance.z / length(distance) };
+	return { distance.x / Length(distance),distance.y / Length(distance),distance.z / Length(distance) };
 }
 
 float OwnMatrix4x4::Dot(Vector3 c, Vector3 d)
@@ -49,7 +49,7 @@ float OwnMatrix4x4::Dot(Vector3 c, Vector3 d)
 	return c.x * d.x + c.y * d.y + c.z * d.z;
 }
 
-Vector3 OwnMatrix4x4::cross(const Vector3& u, const Vector3& v)
+Vector3 OwnMatrix4x4::Cross(const Vector3& u, const Vector3& v)
 {
 	return Vector3(
 		u.y * v.z - u.z * v.y,
@@ -238,9 +238,9 @@ Matrix4x4 OwnMatrix4x4::Inverse(const Matrix4x4& m)
 
 Matrix4x4 OwnMatrix4x4::MakeLookAtMatrix4x4(const Vector3& eye, const Vector3& target, const Vector3& up)
 {
-	Vector3 zaxis = normalize(Subtract(target, eye));    // Forward
-	Vector3 xaxis = normalize(cross(up, zaxis));         // Right
-	Vector3 yaxis = cross(zaxis, xaxis);                 // Up
+	Vector3 zaxis = Normalize(Subtract(target, eye));    // Forward
+	Vector3 xaxis = Normalize(Cross(up, zaxis));         // Right
+	Vector3 yaxis = Cross(zaxis, xaxis);                 // Up
 
 	Matrix4x4 viewMatrix = {
 		xaxis.x, yaxis.x, zaxis.x, 0.0f,
@@ -294,9 +294,9 @@ void OwnMatrix4x4::DrawPlane(const Plane& plane, const Matrix4x4& viewProjection
 {
 	Vector3 center = Multiply(plane.distance, plane.normal);
 	Vector3 perpendiculars[4];
-	perpendiculars[0] = normalize(Perpendicular(plane.normal));
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal));
 	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z };
-	perpendiculars[2] = cross(plane.normal, perpendiculars[0]);
+	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]);
 	perpendiculars[3] = { -perpendiculars[2].x,-perpendiculars[2].y,-perpendiculars[2].z };
 
 	Vector3 points[4];
@@ -447,6 +447,36 @@ Vector3 OwnMatrix4x4::Lerp(const Vector3& a, const Vector3& b, float t)
 	result.y = t * a.y + (1.0f - t) * b.y;
 	result.z = t * a.z + (1.0f - t) * b.z;
 	return result;
+}
+
+void OwnMatrix4x4::RotateInCircle(const Sphere& sphere,Vector3& position, float &angle)
+{
+	//position = { sphere.center.x + sphere.radius * cos(theta), sphere.center.y + sphere.radius * sin(theta) };
+	float angularVelocity = 3.14f;
+	float deltaTime = 1.0f / 60.0f;
+	angle += angularVelocity * deltaTime;
+
+	position.x = sphere.center.x + cos(angle) * sphere.radius;
+	position.y = sphere.center.y + sin(angle) * sphere.radius;
+	position.z = sphere.center.z;
+
+	Vector3 velocity;
+	velocity.x = -sphere.radius * angularVelocity * sin(angle);
+	velocity.y = sphere.radius * angularVelocity * cos(angle);
+	velocity.z = 0.0f;
+
+	Vector3 acceleration{};
+	acceleration.x = -sphere.radius * angularVelocity * angularVelocity * cos(angle);
+	acceleration.y = -sphere.radius * angularVelocity * angularVelocity * sin(angle);
+	acceleration.z = 0.0f;
+
+	velocity.x += acceleration.x;
+	velocity.y += acceleration.y;
+	velocity.z += acceleration.z;
+
+	position.x += velocity.x;
+	position.y += velocity.y;
+	position.z += velocity.z;
 }
 
 

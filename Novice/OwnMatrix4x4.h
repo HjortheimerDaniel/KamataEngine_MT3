@@ -6,16 +6,17 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <imgui.h>
+#include "Vector2.h"
 
 class OwnMatrix4x4 {
 public:
 	Vector3 Add(const Vector3& v1, const Vector3& v2);
 	Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 	Vector3 Multiply(const float a, const Vector3& vector);
-	float length(Vector3 distance);
-	Vector3 normalize(Vector3 distance);
+	float Length(Vector3 distance);
+	Vector3 Normalize(Vector3 distance);
 	float Dot(Vector3 c, Vector3 d);
-	Vector3 cross(const Vector3& u, const Vector3& v);
+	Vector3 Cross(const Vector3& u, const Vector3& v);
 	Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 	Matrix4x4 MakeRotateXMatrix(float radian);
 	Matrix4x4 MakeRotateYMatrix(float radian);
@@ -40,4 +41,5 @@ public:
 	Vector3 ClosestPointOnAABB(const Vector3& point, const AABB& aabb);
 	Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
 	//Vector3 Bezier(const Vector3& p0, const Vector3& p1, const Vector3& p2, float t);
+	void RotateInCircle(const Sphere& sphere, Vector3& position, float &angle);
 };
